@@ -1,0 +1,25 @@
+test目录下为所有测试代码
+
+# 1. 单例类
+基础源码：
+base/singleton.h
+
+测试代码：
+test/singleton_test.cpp
+
+# 2. 线程池
+基础源码：
+base/task.h 为任务基类，所有需要在线程池中运行的任务均应从此类继承，并重载Run函数
+base/work.h base/worker.cpp 为工作线程类，其绑定一个线程，并持有一个任务的指针，如果当前处于空闲状态线程会wait，等待有新任务时notify
+base/thread_pool.h base/thread_pool.cpp 为线程池基类，维护一个工作线程列表，拥有AddWork方法，加入新任务的时候即调用此方法，使用取模的方式来将任务分配任务给工作线程，保证任务平均分配
+base/async_worker_manager.h 为线程池的一个实现类，为单例，保证好调用
+
+测试代码：
+test/task_test.h
+test/thread_pool_test.cpp
+
+# 3. protocbuf
+源码：
+protocbuf/proto/common.proto 为pb定义文件
+protocbuf/gen_proto.sh 为proto文件转化为cpp文件
+protocbuf/cpp/* 为pb生成文件

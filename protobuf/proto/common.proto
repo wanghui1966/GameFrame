@@ -1,0 +1,27 @@
+package PB;
+
+enum DATA_TYPE
+{
+	DT_GET_COMMON_INFO_REQ				= 0;	// 获取通用信息请求
+	DT_GET_COMMON_INFO_RSP				= 1;	// 获取通用信息返回
+}
+
+message dt_get_common_info_req
+{
+	optional DATA_TYPE type				= 1 [ default = DT_GET_COMMON_INFO_REQ ];
+	optional int32 id					= 2;
+}
+
+message common_info
+{
+	optional bool flag					= 1;
+	optional bytes str					= 2;
+	repeated int64 ri					= 3;
+}
+message dt_get_common_info_rsp
+{
+	optional DATA_TYPE type				= 1 [ default = DT_GET_COMMON_INFO_RSP ];
+	optional int32 id					= 2;
+	optional common_info oci			= 3;
+	repeated common_info rci			= 4;
+}
