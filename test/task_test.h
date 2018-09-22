@@ -2,6 +2,7 @@
 #define TEST_TASK_H
 
 #include "task.h"
+#include "log.h"
 
 #include <iostream>
 #include <thread>
@@ -16,9 +17,9 @@ public:
     
     virtual void Run()
     {
-        std::cout << m_task_test_id << " Start." << std::endl;
+		NLOG("TaskTest::Run begin:task=%d", m_task_test_id);
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        std::cout << m_task_test_id << " end." << std::endl;
+		NLOG("TaskTest::Run end:task=%d", m_task_test_id);
     }
 
 protected:

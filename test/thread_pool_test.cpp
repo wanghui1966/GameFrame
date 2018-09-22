@@ -6,6 +6,11 @@
 
 int main()
 {
+	sLog.NewInstance();
+	sLog.Init("../config/log.properties");
+	std::thread thlog([=]{ while(true) {sLog.Update();} });
+	thlog.detach();
+
     sAsyncWorkerManager.NewInstance();
     sAsyncWorkerManager.Init();
     sAsyncWorkerManager.Start();
@@ -23,5 +28,7 @@ int main()
 
     sAsyncWorkerManager.Stop();
     sAsyncWorkerManager.DeleteInstance();
+
+	sLog.DeleteInstance();
     return 0;
 }

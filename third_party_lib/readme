@@ -1,0 +1,8 @@
+编译步骤：以log4cplus-1.2.1.zip为例
+1. 解压log4cplus-1.2.1.zip，解压后目录为log4cplus-1.2.1，更改为log4cplus
+2. cd log4cplus
+3. ./configure
+4. make
+5. make check
+
+如果应用程序使用了C++11，一定要记得步骤3时使用：./configure CXXFLAGS="-std=c++0x"，否则编译会出现错误：对‘log4cplus::Logger::operator=(log4cplus::Logger&&)’未定义的引用
