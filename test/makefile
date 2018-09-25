@@ -1,6 +1,5 @@
 
-#log4cplus_test singleton_test thread_pool_test protobuf_test thread_safe_container_test
-all:log4cplus_test thread_pool_test
+all:log4cplus_test singleton_test thread_pool_test protobuf_test thread_safe_container_test
 .PHONY:all
 
 LIB_OPTION_COMMON=-std=c++11 -g

@@ -1,3 +1,3 @@
 
-rm -f server/*
-rm -f groot/*
+rm -f server/*log*
+rm -f groot/*log*
