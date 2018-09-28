@@ -24,7 +24,7 @@ public:
 
 	void Update();
 
-	void PrintLog(const char *cur_file, const char *cur_fun, int cur_line, char lv_c, const char *fmt, ...);
+	void PrintLog(const char *file_name, const char *func_name, int line, char lv_c, const char *fmt, ...);
 
 protected:
 	log4cplus::Logger m_logger_server;

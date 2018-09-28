@@ -45,7 +45,7 @@ void Log::Update()
 	}
 }
 
-void Log::PrintLog(const char *cur_file, const char *cur_fun, int cur_line, char lv_c, const char *fmt, ...)
+void Log::PrintLog(const char *file_name, const char *func_name, int line, char lv_c, const char *fmt, ...)
 {
 	if (m_log_ts_queue.Size() > SERVER_LOG_TS_QUEUE_MAX_SIZE)
 	{
@@ -84,6 +84,14 @@ void Log::PrintLog(const char *cur_file, const char *cur_fun, int cur_line, char
 
 	// 日志尾
 	std::string tail;
+	if (lv_c == 'F' || lv_c == 'E')
+	{
+		char buf[256];
+		memset(buf, 0, sizeof(buf));
+		snprintf(buf, sizeof(buf), " [[[ file_name=%s, func_name=%s, line=%u ]]]\n", file_name, func_name, line);
+		log.append(buf);
+	}
+	else
 	{
 		log.append("\n");
 	}
