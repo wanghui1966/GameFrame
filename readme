@@ -4,11 +4,13 @@ test目录下为所有测试代码
 一个使用log4cplus搭建的日志系统
 
 源码：
-base/log/log.h base/log/log.cpp
+base/log/log.h
+base/log/log.cpp
 配置文件：
 config/log.properties
 日志输出文件
-log/server/ log/groot/
+log/server/
+log/groot/
 测试代码：
 test/log4cplus_test.cpp
 
@@ -49,3 +51,14 @@ base/thread_safe_container/ts_queue.h
 
 测试代码：
 test/thread_safe_container_test.cpp
+
+
+# 6. 系列化
+结构体 或 pb 系列化
+
+源码：
+base/packet/packet.h
+base/packet/packet.cpp
+
+测试代码：
+test/packet_test.cpp
