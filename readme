@@ -62,3 +62,20 @@ base/packet/packet.cpp
 
 测试代码：
 test/packet_test.cpp
+
+# 7. 带心跳的对象池
+
+源码：
+base/object_pool/object_pool_manager.h
+base/object_pool/object.h
+
+测试代码：
+test/object_pool_test.cpp
+
+# 8. 定时器
+
+源码：
+base/timer/timer.h
+
+测试代码：
+test/timer_test.cpp
