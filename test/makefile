@@ -45,7 +45,7 @@ FILE_LIST_OBJECT_POOL=./object_pool_test.cpp
 object_pool_test:$(FILE_LIST_OBJECT_POOL)
 	g++ $(FILE_LIST_OBJECT_POOL) -o object_pool_test $(LIB_OPTION_BASE) $(LIB_OPTION_OBJECT_POOL)
 
-LIB_OPTION_TIMER=-I../base/timer
+LIB_OPTION_TIMER=-I../base/timer -pthread
 FILE_LIST_TIMER=./timer_test.cpp
 timer_test:$(FILE_LIST_TIMER)
 	g++ $(FILE_LIST_TIMER) -o timer_test $(LIB_OPTION_BASE) $(LIB_OPTION_TIMER)
