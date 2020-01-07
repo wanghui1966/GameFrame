@@ -2,9 +2,10 @@
 #include "../thread_pool/task.h"
 #include "../common.h"
 
-#include <iostream>
 #include <thread>
 #include <chrono>
+
+#include "debug.h"
 
 // 循环执行的任务，执行完任务后2个tick后再执行一遍
 void circle_task_test(int task_id);
@@ -17,9 +18,9 @@ public:
     
     virtual void Run()
     {
-		std::cout << GetTimeStr(time(nullptr)) << " CricleTaskTest::Run begin:task=" << m_task_id << std::endl;
+		NLOG("CricleTaskTest::Run begin:task=%u", m_task_id);
 		std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-		std::cout << GetTimeStr(time(nullptr)) << " CircleTaskTest::Run end:task=" << m_task_id << std::endl;
+		NLOG("CricleTaskTest::Run end:task=%u", m_task_id);
 		circle_task_test(++m_task_id);
 		delete this;
     }
@@ -29,7 +30,7 @@ protected:
 };
 void circle_task_test(int task_id)
 {
-	iTimer.AddTask(2, new CircleTaskTest(task_id));
+	sTimer.AddTask(2, new CircleTaskTest(task_id));
 }
 
 // 延时任务，延时5个tick执行一次任务
@@ -43,9 +44,9 @@ public:
 
 	virtual void Run()
 	{
-		std::cout << GetTimeStr(time(nullptr)) << " OnceTaskTest::Run begin:task=" << m_task_id << std::endl;
+		NLOG("OnceTaskTest::Run begin:task=%u", m_task_id);
 		std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-		std::cout << GetTimeStr(time(nullptr)) << " OnceTaskTest::Run end:task=" << m_task_id << std::endl;
+		NLOG("OnceTaskTest::Run end:task=%u", m_task_id);
 		delete this;
 	}
 
@@ -54,18 +55,18 @@ protected:
 };
 void once_task_test(int task_id)
 {
-	iTimer.AddTask(5, new OnceTaskTest(task_id));
+	sTimer.AddTask(5, new OnceTaskTest(task_id));
 }
 
 int main()
 {
-	iTimer.NewInstance();
-	iTimer.StartTimer(1000000);
+	sTimer.NewInstance();
+	sTimer.StartTimer(1000000);
 
 	// 此线程只是让主线程阻塞永远不结束而已
 	std::thread th([&]{ circle_task_test(1); once_task_test(1);  while(true) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); } });
 	th.join();
 
-	iTimer.DeleteInstance();
+	sTimer.DeleteInstance();
 	return 0;
 }

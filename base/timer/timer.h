@@ -12,8 +12,6 @@
 #include <sys/time.h>
 #include <map>
 
-#include <iostream>
-
 #define MICROSECONDS 1000000
 #define DEFAULT_INTERVAL MICROSECONDS
 // 根据延时时间计算延时tick
@@ -127,6 +125,6 @@ int Timer::m_interval = 0;
 int64_t Timer::m_tick = 0;
 sigset_t Timer::m_sigset;
 std::multimap<int64_t, Task*> Timer::m_timer_tasks;
-#define iTimer (*Timer::Instance())
+#define sTimer (*Timer::Instance())
 
 #endif

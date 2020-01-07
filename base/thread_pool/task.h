@@ -10,9 +10,9 @@
 class Task
 {
 public:
-    Task(){}
-    virtual ~Task(){}
-    virtual void Run() = 0;
+	Task(){}
+	virtual ~Task(){}
+	virtual void Run() = 0;
 };
 
 #endif

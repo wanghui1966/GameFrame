@@ -4,6 +4,7 @@
 #include <queue>
 #include <mutex>
 
+// 线程安全队列
 template<typename T>
 class TSQueue
 {

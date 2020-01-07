@@ -1,15 +1,14 @@
 #include "singleton.h"
 
-#include <iostream>
-using namespace std;
+#include "debug.h"
 
 class Wind : public Singleton<Wind>
 {
 public:
-    Wind() { cout << "Wind constructor." << endl; }
-    ~Wind() { cout << "Wind destructor." << endl; }
+    Wind() { NLOG("Wind constructor"); }
+    ~Wind() { NLOG("Wind destructor"); }
 
-    void Output() { cout << "Wind Output." << endl; }
+    void Output() { NLOG("Wind Output"); }
 };
 
 #define sWind (*Wind::Instance())

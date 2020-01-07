@@ -10,10 +10,10 @@
 #include <map>
 
 #include <cassert>
-#include <iostream>
+#include "../debug.h"
 
 // 多线程对象池的基本实现
-// OBJECT为对象类型
+// OBJECT为对象类型，必须继承于object.h
 // INDEX_MIN为索引最小值
 // INDEX_MAX为索引最大值
 // INC_POOL_SIZE为对象池满了之后每次扩充的对象池大小
@@ -139,7 +139,7 @@ public:
 	{
 		if (m_pool)
 		{
-			std::cout << "ObjectPoolManagerBasic::Init" << std::endl;
+			ELOG("ObjectPoolManagerBasic::Init");
 			assert(false);
 			return false;
 		}
@@ -232,7 +232,7 @@ public:
 	{
 		if (!obj->IsActive())
 		{
-			std::cout << "ObjectPoolManagerBasic::Free" << std::endl;
+			ELOG("ObjectPoolManagerBasic::Free");
 			assert(false);
 			return;
 		}
@@ -342,7 +342,7 @@ public:
 		std::lock_guard<std::mutex> lck(m_mutex_change);
 		if (m_change[obj] > 0)
 		{
-			std::cout << "ObjectPoolManager::Insert" << std::endl;
+			ELOG("ObjectPoolManager::Insert");
 			assert(false);
 			return;
 		}
@@ -354,7 +354,7 @@ public:
 		std::lock_guard<std::mutex> lck(m_mutex_change);
 		if (m_change[obj] < 0)
 		{
-			std::cout << "ObjectPoolManager::Remove" << std::endl;
+			ELOG("ObjectPoolManager::Remove");
 			assert(false);
 			return;
 		}
@@ -400,7 +400,7 @@ public:
 
 		if (!m_obj_set.erase(obj))
 		{
-			std::cout << "ObjectPoolManager::DoDelete" << std::endl;
+			ELOG("ObjectPoolManager::DoDelete");
 			assert(false);
 			return;
 		}
@@ -410,7 +410,7 @@ public:
 	{
 		if (!m_obj_set.insert(obj).second)
 		{
-			std::cout << "ObjectPoolManager::DoInsert" << std::endl;
+			ELOG("ObjectPoolManager::DoInsert");
 			assert(false);
 			return;
 		}
@@ -435,7 +435,7 @@ public:
 			}
 			else
 			{
-				std::cout << "ObjectPoolManager::DoChange" << std::endl;
+				ELOG("ObjectPoolManager::DoChange");
 				assert(false);
 				return;
 			}

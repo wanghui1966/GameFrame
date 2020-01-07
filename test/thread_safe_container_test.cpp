@@ -1,7 +1,6 @@
 #include "ts_queue.h"
 
-#include <iostream>
-
+#include "debug.h"
 
 void TSQueueOutput(TSQueue<int>& tsq)
 {
@@ -14,7 +13,7 @@ void TSQueueOutput(TSQueue<int>& tsq)
 	int back = 0;
 	bool is_back = tsq.Back(back);
 
-	std::cout << "TSQueueOutput::is_empty=" << is_empty << ", size=" << size << ", is_front=" << is_front << ", front=" << front << ", is_back" << is_back << ", back=" << back << std::endl;
+	NLOG("TSQueueOutput::is_empty=%d, size=%zu, is_front=%d, front=%d, is_back=%d, back=%d", is_empty, size, is_front, front, is_back, back);
 }
 void TSQueueTest()
 {
@@ -26,7 +25,7 @@ void TSQueueTest()
 
 	int tmp = 0;
 	bool pop_ret = tsq.Pop(tmp);
-	std::cout << "pop_ret=" << pop_ret << ", tmp=" << tmp << std::endl;
+	NLOG("pop_ret=%d, tmp=%d", pop_ret, tmp);
 	TSQueueOutput(tsq);
 }
 

@@ -3,20 +3,24 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <cstdint>
+#include <string>
 #include <cassert>
 
 // 对象的类型
 enum XID_TYPE
 {
-	XT_NONE					= 0,	// 无类型
+	XT_NONE					= 0,				// 无类型
 
-	XT_WIND					= 100,	// 测试类型Wind
-	XT_SNOW_1				= 101,	// 测试类型Snow
-	XT_SNOW_2				= 102,	// 测试类型Snow
+	XT_WIND					= 2000,				// 测试类型Wind
+	XT_SNOW_1				= 2001,				// 测试类型Snow
+	XT_SNOW_2				= 2002,				// 测试类型Snow
+
+	XT_SHM_WIND				= 2010,				// 共享内存测试类型Wind
 
 	XT_COUNT				= XT_SNOW_2,
 
-	XT_MAX					= 0x7f,
+	XT_MAX					= 0x7ff,			// 2047
 };
 
 static bool IsValidXIDType(int type)
@@ -24,15 +28,15 @@ static bool IsValidXIDType(int type)
 	return (type >= XT_NONE && type <= XT_COUNT);
 }
 
-#define XID_ID_MAX 0x00ffffffffffffff
+#define XID_ID_MAX 0x000fffffffffffff
 static bool IsValidXIDId(int id)
 {
-	return (id >= 0 && id <=XID_ID_MAX);
+	return (id >= 0 && id <= XID_ID_MAX);
 }
 
-#define XID_TYPE_LEFT_MOVE_BIT 56
-#define XID_TYPE_MASK 0xff00000000000000
-#define XID_ID_MASK 0x00ffffffffffffff
+#define XID_TYPE_LEFT_MOVE_BIT 52
+#define XID_TYPE_MASK 0xfff0000000000000
+#define XID_ID_MASK 0x000fffffffffffff
 
 // 对象的xid
 struct XID

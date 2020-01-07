@@ -9,7 +9,7 @@
 class AsyncWorkerManager : public ThreadPool, public Singleton<AsyncWorkerManager>
 {
 public:
-    explicit AsyncWorkerManager(uint32_t pool_size = DEFAULT_THREAD_POOL_SIZE) : ThreadPool(pool_size) {}
+	explicit AsyncWorkerManager(uint32_t pool_size = DEFAULT_THREAD_POOL_SIZE) : ThreadPool(pool_size) {}
 };
 
 #define sAsyncWorkerManager (*AsyncWorkerManager::Instance())

@@ -1,7 +1,6 @@
 #include "object_pool_manager.h"
 #include "object.h"
 
-#include <iostream>
 #include <ctime>
 #include <thread>
 #include <chrono>
@@ -23,7 +22,7 @@ public:
 public:
 	virtual void Heartbeat()
 	{
-		std::cout << GetTimeStr(time(nullptr)) << " Wind::Heartbeat:" << GetXID().id << std::endl;
+		NLOG("Wind::Heartbeat:xid=%ld", GetXID().id);
 	}
 };
 
@@ -36,7 +35,7 @@ public:
 public:
 	virtual void Heartbeat()
 	{
-		std::cout << GetTimeStr(time(nullptr)) << " Snow::Heartbeat:" << GetXID().id << std::endl;
+		NLOG("Snow::Heartbeat:xid=%ld", GetXID().id);
 	}
 };
 
@@ -211,7 +210,6 @@ int main()
 	{
 		FreeObject(obj_snow_2[i]);
 	}
-
 
 	return 0;
 }

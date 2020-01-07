@@ -17,21 +17,21 @@ class Worker
 {
 friend class ThreadPool;
 public:
-    explicit Worker(Task *task = nullptr);
-    ~Worker();
+	explicit Worker(Task *task = nullptr);
+	~Worker();
 
 public:
-    void SetTask(Task *task);
-    bool IsRunning();
-    void Run();
-    void Stop();
+	void SetTask(Task *task);
+	bool IsRunning();
+	void Run();
+	void Stop();
 
 protected:
-    Task                        *m_task;            // 任务指针
-    bool                        m_running;          // 是否正在运行
-    std::thread                 *m_thread;          // 线程指针
-    std::condition_variable     m_cv;               // 条件变量
-    std::mutex                  m_mutex;            // 互斥锁
+	Task						*m_task;			// 任务指针
+	bool						m_running;			// 是否正在运行
+	std::thread					*m_thread;			// 线程指针
+	std::condition_variable		m_cv;				// 条件变量
+	std::mutex					m_mutex;			// 互斥锁
 };
 
 #endif
