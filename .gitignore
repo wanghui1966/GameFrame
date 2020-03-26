@@ -1,3 +1,17 @@
 
 log/server/*log*
 log/groot/*log*
+
+protobuf/cpp/*
+
+test/common_test
+test/log4cplus_test
+test/singleton_test
+test/thread_pool_test
+test/protobuf_test
+test/thread_safe_container_test
+test/packet_test
+test/object_pool_test
+test/timer_test
+test/shm_master_test
+test/shm_slave_test

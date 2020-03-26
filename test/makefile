@@ -58,14 +58,14 @@ shm_test:$(FILE_LIST_SHM_MASTER) $(FILE_LIST_SHM_SLAVE)
 
 .PHONY:clean
 clean:
-	/usr/bin/rm -f common_test
-	/usr/bin/rm -f log4cplus_test
-	/usr/bin/rm -f singleton_test
-	/usr/bin/rm -f thread_pool_test
-	/usr/bin/rm -f protobuf_test
-	/usr/bin/rm -f thread_safe_container_test
-	/usr/bin/rm -f packet_test
-	/usr/bin/rm -f object_pool_test
-	/usr/bin/rm -f timer_test
-	/usr/bin/rm -f shm_master_test
-	/usr/bin/rm -f shm_slave_test
+	rm -f common_test
+	rm -f log4cplus_test
+	rm -f singleton_test
+	rm -f thread_pool_test
+	rm -f protobuf_test
+	rm -f thread_safe_container_test
+	rm -f packet_test
+	rm -f object_pool_test
+	rm -f timer_test
+	rm -f shm_master_test
+	rm -f shm_slave_test

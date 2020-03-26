@@ -33,7 +33,7 @@ void UnpackRsp(const PB::dt_get_common_info_rsp &rsp)
 	printf("oci=(flag=%d, str=%s, ri_size=%d", ci.flag(), ci.str().c_str(), ci.ri_size());
 	for (int i = 0; i < ci.ri_size(); ++i)
 	{
-		printf(", ri_%d=%d", i, ci.ri(i));
+		printf(", ri_%d=%ld", i, ci.ri(i));
 	}
 	printf(")\n");
 
@@ -44,7 +44,7 @@ void UnpackRsp(const PB::dt_get_common_info_rsp &rsp)
 		printf(", rci_%d=[flag=%d, str=%s, ri_size=%d", i, ele.flag(), ele.str().c_str(), ele.ri_size());
 		for (int j = 0; j < ele.ri_size(); ++j)
 		{
-			printf(", ri_%d=%d", j, ele.ri(j));
+			printf(", ri_%d=%ld", j, ele.ri(j));
 		}
 		printf("]");
 	}
