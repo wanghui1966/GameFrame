@@ -2,8 +2,8 @@ CPPFLAGS="-I$abs_top_builddir/include -I$abs_top_srcdir/include  -D_GNU_SOURCE=1
 
 : ${CC='gcc'}
 : ${CXX='g++'}
-: ${CXXFLAGS='-std=c++0x -Wall -fdiagnostics-show-caret -ftrack-macro-expansion -fdiagnostics-color=auto -Wextra -pedantic -Wstrict-aliasing -Wstrict-overflow -Woverloaded-virtual -Wold-style-cast -Wc++0x-compat -Wc++11-compat -Wundef -Wshadow -Wformat -Wsuggest-attribute=format -Wsuggest-attribute=noreturn -Wno-variadic-macros -O2 -fvisibility=hidden -pthread'}
-: ${GREP='/usr/bin/grep'}
+: ${CXXFLAGS='-g -O2 -Wall -fdiagnostics-show-caret -ftrack-macro-expansion -fdiagnostics-color=auto -Wextra -pedantic -Wstrict-aliasing -Wstrict-overflow -Woverloaded-virtual -Wold-style-cast -Wc++0x-compat -Wc++11-compat -Wundef -Wshadow -Wformat -Wsuggest-attribute=format -Wsuggest-attribute=noreturn -Wno-variadic-macros -fvisibility=hidden -pthread'}
+: ${GREP='/bin/grep'}
 : ${AWK='gawk'}
-: ${SED='/usr/bin/sed'}
+: ${SED='/bin/sed'}
 : ${ENABLE_THREADS='yes'}

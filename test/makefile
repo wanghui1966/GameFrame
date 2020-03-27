@@ -9,7 +9,7 @@ FILE_LIST_COMMON=./common_test.cpp
 common_test:$(FILE_LIST_COMMON)
 	g++ $(FILE_LIST_COMMON) -o common_test $(LIB_OPTION_BASE) $(LIB_OPTION_COMMON)
 
-LIB_OPTION_LOG4CPLUS=-I../base/log -I../third_party_lib/log4cplus/include -L../third_party_lib/log4cplus/.libs -Wl,-rpath ../third_party_lib/log4cplus/.libs -llog4cplus
+LIB_OPTION_LOG4CPLUS=-I../base/log -I../third_party_lib/log4cplus/include -L../third_party_lib/log4cplus/.libs -Wl,-rpath ../third_party_lib/log4cplus/.libs -llog4cplus -pthread
 FILE_LIST_LOG4CPLUS=./log4cplus_test.cpp ../base/log/log.cpp
 log4cplus_test:$(FILE_LIST_LOG4CPLUS)
 	g++ $(FILE_LIST_LOG4CPLUS) -o log4cplus_test $(LIB_OPTION_BASE) $(LIB_OPTION_LOG4CPLUS)
