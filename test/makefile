@@ -1,5 +1,5 @@
 
-all:common_test log4cplus_test singleton_test thread_pool_test protobuf_test thread_safe_container_test packet_test object_pool_test timer_test shm_test
+all:common_test log4cplus_test singleton_test thread_pool_test protobuf_test thread_safe_container_test packet_test object_pool_test timer_test shm_test patch_test
 .PHONY:all
 
 LIB_OPTION_BASE=-std=c++11 -g
@@ -56,16 +56,23 @@ shm_test:$(FILE_LIST_SHM_MASTER) $(FILE_LIST_SHM_SLAVE)
 	g++ $(FILE_LIST_SHM_MASTER) -o shm_master_test $(LIB_OPTION_BASE) $(LIB_OPTION_SHM)
 	g++ $(FILE_LIST_SHM_SLAVE) -o shm_slave_test $(LIB_OPTION_BASE) $(LIB_OPTION_SHM)
 
+LIB_OPTION_PATCH=-I../base -pthread -L. -Wl,-rpath . -fno-access-control -rdynamic -fpic -ldl -m64
+FILE_LIST_PATCH=./patch_test.cpp ./patch_wind.cpp
+patch_test:$(FILE_LIST_PATCH)
+	g++ $(FILE_LIST_PATCH) -o patch_test $(LIB_OPTION_BASE) $(LIB_OPTION_PATCH)
+
 .PHONY:clean
 clean:
-	rm -f common_test
-	rm -f log4cplus_test
-	rm -f singleton_test
-	rm -f thread_pool_test
-	rm -f protobuf_test
-	rm -f thread_safe_container_test
-	rm -f packet_test
-	rm -f object_pool_test
-	rm -f timer_test
-	rm -f shm_master_test
-	rm -f shm_slave_test
+	/usr/bin/rm -f common_test
+	/usr/bin/rm -f log4cplus_test
+	/usr/bin/rm -f singleton_test
+	/usr/bin/rm -f thread_pool_test
+	/usr/bin/rm -f protobuf_test
+	/usr/bin/rm -f thread_safe_container_test
+	/usr/bin/rm -f packet_test
+	/usr/bin/rm -f object_pool_test
+	/usr/bin/rm -f timer_test
+	/usr/bin/rm -f shm_master_test
+	/usr/bin/rm -f shm_slave_test
+	/usr/bin/rm -f patch_test
+	/usr/bin/rm -f libpatch.so

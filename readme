@@ -95,3 +95,15 @@ base/shm/shm_manager.h
 
 测试代码：
 test/timer_test.cpp
+
+# 10. 热更
+使用so文件进行热更的实现
+
+源码：
+base/patch.h
+
+测试代码：
+test/patch_test.cpp
+test/patch_wind.h
+test/patch_wind.cpp
+test/patch.cpp
