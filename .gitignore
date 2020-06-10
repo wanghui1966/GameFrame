@@ -13,3 +13,5 @@ test/object_pool_test
 test/timer_test
 test/shm_master_test
 test/shm_slave_test
+test/patch_test
+test/libpatch.so
