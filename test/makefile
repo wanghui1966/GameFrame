@@ -24,7 +24,7 @@ FILE_LIST_THREAD_POOL=./thread_pool_test.cpp ../base/thread_pool/thread_pool.cpp
 thread_pool_test:$(FILE_LIST_THREAD_POOL)
 	g++ $(FILE_LIST_THREAD_POOL) -o thread_pool_test $(LIB_OPTION_BASE) $(LIB_OPTION_THREAD_POOL) $(LIB_OPTION_LOG4CPLUS)
 
-LIB_OPTION_PROTOBUF=-I/usr/local/include/google/protobuf -L/usr/local/lib -lprotobuf -pthread
+LIB_OPTION_PROTOBUF=-I/usr/local/include/google/protobuf -L/usr/local/lib -lprotobuf -wl,-rpath /usr/local/lib -pthread
 FILE_LIST_PROTOBUF=./protobuf_test.cpp ../protobuf/cpp/*
 protobuf_test:$(FILE_LIST_PROTOBUF)
 	g++ $(FILE_LIST_PROTOBUF) -o protobuf_test $(LIB_OPTION_BASE) $(LIB_OPTION_PROTOBUF)
