@@ -4,11 +4,13 @@
 #include <cstring>
 #include "../protobuf/cpp/common.pb.h"
 
+#include "debug.h"
+
 #include <cstdio>
 
 void test_struct()
 {
-	printf("test_struct begin\n");
+	NLOG("============test_struct begin============");
 
 	struct Data
 	{
@@ -41,7 +43,7 @@ void test_struct()
 		void GetStr(std::string &str)
 		{
 			char buf[1024] = {0};
-			snprintf(buf, sizeof(buf), "data1=%c, data2=%c, data3=%d, data4=%hd, data5=%hu, data6=%d, data7=%u, data8=%lld, data9=%llu, data10=%.2f, data11=%.2lf, data12=%s\n", data1, data2, data3, data4, data5, data6, data7, data8, data9, data10, data11, data12.c_str());
+			snprintf(buf, sizeof(buf), "data1=%c, data2=%c, data3=%d, data4=%hd, data5=%hu, data6=%d, data7=%u, data8=%lld, data9=%llu, data10=%.2f, data11=%.2lf, data12=%s", data1, data2, data3, data4, data5, data6, data7, data8, data9, data10, data11, data12.c_str());
 			str = buf;
 		}
 	};
@@ -58,7 +60,7 @@ void test_struct()
 
 	std::string client_data_str;
 	client_data.GetStr(client_data_str);
-	printf("client_data:opcode=%u, data_length=%u, data=[%s]\n", client_packet.GetOpcode(), client_packet.GetDataLength(), client_data_str.c_str());
+	NLOG("client_data:opcode=%u, data_length=%u, data=[%s]", client_packet.GetOpcode(), client_packet.GetDataLength(), client_data_str.c_str());
 
 	// 模拟收包之后得到buf
 	uint32_t buf_size = client_packet.GetSize();
@@ -76,27 +78,13 @@ void test_struct()
 
 	std::string server_data_str;
 	server_data.GetStr(server_data_str);
-	printf("server_data:opcode=%u, data_length=%u, data=[%s]\n", server_packet.GetOpcode(), server_packet.GetDataLength(), server_data_str.c_str());
-	printf("test_struct end\n\n");
+	NLOG("server_data:opcode=%u, data_length=%u, data=[%s]", server_packet.GetOpcode(), server_packet.GetDataLength(), server_data_str.c_str());
+	NLOG("============test_struct end============");
 }
 
-void GetPBStr(const PB::common_info& pb, std::string &str)
-{
-	char buf[256] = {0};
-	snprintf(buf, sizeof(buf), "flag=%d, str=%s, ri_size=%d, ri=(", pb.flag(), pb.str().c_str(), pb.ri_size());
-	str = buf;
-
-	for (int i = 0; i < pb.ri_size(); ++i)
-	{
-		memset(buf, 0, sizeof(buf));
-		snprintf(buf, sizeof(buf), "%lld, ", pb.ri(i));
-		str += buf;
-	}
-	str += ")";
-}
 void test_pb()
 {
-	printf("test_pb begin\n");
+	NLOG("============test_pb begin============");
 
 	PB::common_info client_pb;
 	client_pb.set_flag(true);
@@ -115,10 +103,7 @@ void test_pb()
 
 	// 模拟发包之前打包
 	client_packet.PackageData();
-
-	std::string client_data_str;
-	GetPBStr(client_pb, client_data_str);
-	printf("client_data:opcode=%u, data_length=%u, data=[%s]\n", client_packet.GetOpcode(), client_packet.GetDataLength(), client_data_str.c_str());
+	NLOG("client_data:opcode=%u, data_length=%u, data_str=%s, data=[%s]", client_packet.GetOpcode(), client_packet.GetDataLength(), client_pb.str().c_str(), client_pb.DebugString().c_str());
 
 	// 模拟收包之后得到buf
 	uint32_t buf_size = client_packet.GetSize();
@@ -139,15 +124,16 @@ void test_pb()
 	PB::common_info server_pb;
 	server_pb.ParseFromString(server_data);
 
-	std::string server_data_str;
-	GetPBStr(server_pb, server_data_str);
-	printf("server_data:opcode=%u, data_length=%u, data=[%s]\n", server_packet.GetOpcode(), server_packet.GetDataLength(), server_data_str.c_str());
-	printf("test_pb end\n\n");
+	NLOG("server_data:opcode=%u, data_length=%u, data_str=%s, data=[%s]", server_packet.GetOpcode(), server_packet.GetDataLength(), server_pb.str().c_str(), server_pb.DebugString().c_str());
+	NLOG("============test_pb end============");
 }
 
 int main()
 {
+	NLOG("\n");
 	test_struct();
+	NLOG("\n");
 	test_pb();
+	NLOG("\n");
 	return 0;
 }
