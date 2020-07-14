@@ -1,4 +1,6 @@
 
+third_party_lib/log4cplus
+
 log/server/*log*
 log/groot/*log*
 
