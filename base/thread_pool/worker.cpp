@@ -25,7 +25,7 @@ void Worker::SetTask(Task *task)
 		return;
 	}
 
-	std::lock_guard<std::mutex> lck (m_mutex);
+	std::lock_guard<std::mutex> lck(m_mutex);
 	m_task = task;
 	m_cv.notify_one();
 }
@@ -43,7 +43,7 @@ void Worker::Run()
 	}
 	m_running = true;
 
-	while(m_running)
+	while (m_running)
 	{
 		Task *task = nullptr;
 		if ((task = m_task) == nullptr)

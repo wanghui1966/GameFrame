@@ -24,6 +24,7 @@ bool ThreadPool::Init()
 	{
 		Worker *worker = new Worker(nullptr);
 		m_workers.push_back(worker);
+		NLOG("ThreadPool::Init success:worker=%p", worker);
 	}
 	return true;
 }
@@ -40,6 +41,7 @@ void ThreadPool::Start()
 			continue;
 		}
 		worker->m_thread = new std::thread([=]{worker->Run();});
+		NLOG("ThreadPool::Start success:worker=%p", worker);
 	}
 }
 
@@ -54,6 +56,7 @@ void ThreadPool::Stop()
 		{
 			continue;
 		}
+		NLOG("ThreadPool::Stop success:worker=%p", worker);
 		worker->Stop();
 	}
 }
@@ -110,6 +113,8 @@ void ThreadPool::Update()
 
 void ThreadPool::ReleaseWorkers()
 {
+	NLOG("ThreadPool::ReleaseWorkers success");
+
 	std::lock_guard<std::mutex> lck(m_mutex);
 	for (auto it = m_workers.begin(); it != m_workers.end(); ++it)
 	{
@@ -130,6 +135,8 @@ void ThreadPool::ReleaseWorkers()
 
 void ThreadPool::ReleaseTasks()
 {
+	NLOG("ThreadPool::ReleaseTasks success");
+
 	for (auto it_i = m_tasks.begin(); it_i != m_tasks.end(); ++it_i)
 	{
 		if (it_i->second.empty())

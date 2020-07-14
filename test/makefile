@@ -20,9 +20,9 @@ singleton_test:$(FILE_LIST_SINGLETON)
 	g++ $(FILE_LIST_SINGLETON) -o singleton_test $(LIB_OPTION_BASE) $(LIB_OPTION_SINGLETON)
 
 LIB_OPTION_THREAD_POOL=-I../base -I../base/thread_pool -lpthread
-FILE_LIST_THREAD_POOL=./thread_pool_test.cpp ../base/thread_pool/thread_pool.cpp ../base/thread_pool/worker.cpp ../base/log/log.cpp
+FILE_LIST_THREAD_POOL=./thread_pool_test.cpp ../base/thread_pool/thread_pool.cpp ../base/thread_pool/worker.cpp
 thread_pool_test:$(FILE_LIST_THREAD_POOL)
-	g++ $(FILE_LIST_THREAD_POOL) -o thread_pool_test $(LIB_OPTION_BASE) $(LIB_OPTION_THREAD_POOL) $(LIB_OPTION_LOG4CPLUS)
+	g++ $(FILE_LIST_THREAD_POOL) -o thread_pool_test $(LIB_OPTION_BASE) $(LIB_OPTION_THREAD_POOL)
 
 LIB_OPTION_PROTOBUF=-I/usr/local/include/google/protobuf -I../base -L/usr/local/lib -lprotobuf -Wl,-rpath /usr/local/lib -pthread
 FILE_LIST_PROTOBUF=./protobuf_test.cpp ../protobuf/cpp/*

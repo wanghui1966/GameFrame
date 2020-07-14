@@ -1,10 +1,11 @@
 #include "async_worker_manager.h"
-#include "log.h"
 #include "task.h"
 
 #include <cstdio>
 #include <thread>
 #include <chrono>
+
+#include "debug.h"
 
 class TaskTest : public Task
 {
@@ -26,11 +27,6 @@ protected:
 
 int main()
 {
-	sLog.NewInstance();
-	sLog.Init("../config/log.properties");
-	std::thread thlog([=]{ while(true) {sLog.Update();} });
-	thlog.detach();
-
     sAsyncWorkerManager.NewInstance();
     sAsyncWorkerManager.Init();
     sAsyncWorkerManager.Start();
@@ -49,6 +45,5 @@ int main()
     sAsyncWorkerManager.Stop();
     sAsyncWorkerManager.DeleteInstance();
 
-	sLog.DeleteInstance();
     return 0;
 }

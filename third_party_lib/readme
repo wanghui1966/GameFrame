@@ -1,6 +1,6 @@
 编译步骤：以log4cplus-1.2.1.zip为例
 1. 解压log4cplus-1.2.1.zip，解压后目录为log4cplus-1.2.1，更改为log4cplus
 2. cd log4cplus
-3. ./configure
+3. ./configure，如果使用程序用到了c++11(编译用了-std=c++11)，则需要使用./configure CXXFLAGS="-std=c++11"
 4. make
 5. make check
