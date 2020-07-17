@@ -1,8 +1,14 @@
 
+protobuf/cpp/*h
+protobuf/cpp/*cc
+
 third_party_lib/log4cplus
+third_party_lib/redis
+third_party_lib/hiredis
 
 log/server/*log*
 log/groot/*log*
+log/redis/*log*
 
 test/common_test
 test/log4cplus_test
@@ -17,3 +23,4 @@ test/shm_master_test
 test/shm_slave_test
 test/patch_test
 test/libpatch.so
+test/redis_test

@@ -1,5 +1,5 @@
 
-all:common_test log4cplus_test singleton_test thread_pool_test protobuf_test thread_safe_container_test packet_test object_pool_test timer_test shm_test patch_test
+all:common_test log4cplus_test singleton_test thread_pool_test protobuf_test thread_safe_container_test packet_test object_pool_test timer_test shm_test patch_test redis_test
 .PHONY:all
 
 LIB_OPTION_BASE=-std=c++11 -g
@@ -61,6 +61,11 @@ FILE_LIST_PATCH=./patch_test.cpp ./patch_wind.cpp
 patch_test:$(FILE_LIST_PATCH)
 	g++ $(FILE_LIST_PATCH) -o patch_test $(LIB_OPTION_BASE) $(LIB_OPTION_PATCH)
 
+LIB_OPTION_REDIS=-I../base -I../base/redis -I../third_party_lib/hiredis -L../third_party_lib/hiredis -Wl,-rpath ../third_party_lib/hiredis -lhiredis -pthread
+FILE_LIST_REDIS=./redis_test.cpp ../base/redis/redis_manager.cpp
+redis_test:$(FILE_LIST_REDIS)
+	g++ $(FILE_LIST_REDIS) -o redis_test $(LIB_OPTION_BASE) $(LIB_OPTION_REDIS)
+
 .PHONY:clean
 clean:
 	/usr/bin/rm -f common_test
@@ -76,3 +81,4 @@ clean:
 	/usr/bin/rm -f shm_slave_test
 	/usr/bin/rm -f patch_test
 	/usr/bin/rm -f libpatch.so
+	/usr/bin/rm -f redis_test

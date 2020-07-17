@@ -30,7 +30,6 @@ protected:
 	log4cplus::Logger m_logger_server;
 	TSQueue<std::string> m_log_ts_queue;
 };
-
 #define sLog (*Log::Instance())
 
 // fatal

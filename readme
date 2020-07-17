@@ -107,3 +107,18 @@ test/patch_test.cpp
 test/patch_wind.h
 test/patch_wind.cpp
 test/patch.cpp
+
+# 11. redis
+使用开源hiredis对redis进行封装成一个redis连接池
+
+redis配置：redis/redis.conf
+启动redis服务器脚本：redis/start_server.sh
+停止redis服务器脚本：redis/stop_server.sh
+启动redis客户端脚本：redis/client.sh
+
+源码：
+base/redis/redis_manager.h
+base/redis/redis_manager.cpp
+
+测试代码：
+test/redis_test.cpp
