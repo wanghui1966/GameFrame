@@ -11,7 +11,7 @@
 安装步骤：以redis-5.0.8.tar.gz为例，6.0.5莫名编译不过。。。
 1. 解压redis-5.0.8.tar.gz，解压后目录为redis-5.0.8.tar.gz，更改为redis
 2. cd redis
-3. make
+3. make，如果缺tcl，就执行sudo apt-get install tcl
 4. make test
 
 # 3. hiredis

@@ -8,6 +8,7 @@
 #include <vector>
 #include <set>
 #include <map>
+#include <functional>
 
 #include <cassert>
 #include "../debug.h"

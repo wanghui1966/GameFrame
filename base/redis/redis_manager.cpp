@@ -206,7 +206,7 @@ bool Redis::EnsureConnect()
 	{
 		return Connect();
 	}
-		
+
 	if (m_connect->err != REDIS_OK)
 	{
 		return ReConnect();
