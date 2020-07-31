@@ -7,18 +7,18 @@
 
 /*
 
-   任何数据系列化后都会变成：数据=数据头(操作码+数据体长度)+数据体
+   任何数据系列化后都会变成：数据=数据头(数据体长度+操作码)+数据体
 
    任何数据结构系列化后都会变成一个char类型的数组
 
 */
 
-// 操作码 长度(字节)
-const uint32_t PACKET_OPCODE_SIZE = 4;
 // 数据体长度 长度(字节)
 const uint32_t PACKET_DATA_LENGTH_SIZE = 4;
+// 操作码 长度(字节)
+const uint32_t PACKET_OPCODE_SIZE = 4;
 // 数据头 长度(字节)
-const uint32_t PACKET_HEADER_SIZE = PACKET_OPCODE_SIZE + PACKET_DATA_LENGTH_SIZE;
+const uint32_t PACKET_HEADER_SIZE = PACKET_DATA_LENGTH_SIZE + PACKET_OPCODE_SIZE;
 // 数据 默认长度(字节)
 const uint32_t PACKET_DEFAULT_SIZE = 1024;
 // 数据 最大长度(字节)
@@ -142,13 +142,13 @@ protected:
 	}
 
 protected:
-	char*				m_data;							// 数据指针
-	uint32_t			m_size;							// 数据长度
+	char*				m_data = nullptr;				// 数据指针
+	uint32_t			m_size = 0;						// 数据长度
 
-	uint32_t			m_opcode;						// 操作码
-	uint32_t			m_data_length;					// 数据长度
+	uint32_t			m_data_length = 0;				// 数据长度
+	uint32_t			m_opcode = 0;					// 操作码
 
-	uint32_t			m_pos;							// 数据读/写的偏移
+	uint32_t			m_pos = 0;						// 数据读/写的偏移
 };
 
 #endif

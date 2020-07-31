@@ -122,3 +122,13 @@ base/redis/redis_manager.cpp
 
 测试代码：
 test/redis_test.cpp
+
+# 12 环形缓冲区
+一个简单的环形缓冲区
+
+源码：
+base/circle_buffer/circle_buffer.h
+base/circle_buffer/circle_buffer.cpp
+
+测试代码：
+test/circle_buffer_test.cpp
