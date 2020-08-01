@@ -127,7 +127,7 @@ bool CircleBuffer::Read(char *buf, int size, bool change_read_pos/* = true*/)
 {
 	if (!CanRead(size))
 	{
-		ELOG("CircleBuffer::Read fail for CanWrite:buf=%p, read_pos=%d, write_pos=%d, can_read_size=%d, size=%d", buf, m_read_pos, m_read_pos, GetCanReadSize(), size);
+		ELOG("CircleBuffer::Read fail for CanRead:buf=%p, read_pos=%d, write_pos=%d, can_read_size=%d, size=%d", buf, m_read_pos, m_read_pos, GetCanReadSize(), size);
 		return false;
 	}
 	// 一定要保证可以读！！！

@@ -1,5 +1,6 @@
 
-all:common_test log4cplus_test singleton_test thread_pool_test protobuf_test thread_safe_container_test packet_test object_pool_test timer_test shm_test patch_test redis_test circle_buffer_test net_test
+#all:common_test log4cplus_test singleton_test thread_pool_test protobuf_test thread_safe_container_test packet_test object_pool_test timer_test shm_test patch_test redis_test circle_buffer_test net_test
+all:net_test
 .PHONY:all
 
 LIB_OPTION_BASE=-std=c++11 -g
@@ -71,10 +72,10 @@ FILE_LIST_CIRCLE_BUFFER=./circle_buffer_test.cpp ../base/circle_buffer/circle_bu
 circle_buffer_test:$(FILE_LIST_CIRCLE_BUFFER)
 	g++ $(FILE_LIST_CIRCLE_BUFFER) -o circle_buffer_test $(LIB_OPTION_BASE) $(LIB_OPTION_CIRCLE_BUFFER)
 
-LIB_OPTION_NET_SERVER=-I../base -I../base/circle_buffer/ -I../base/net/ -pthread
-LIB_OPTION_NET_CLIENT=-I../base
-FILE_LIST_NET_SERVER=./net_server_test.cpp ../base/circle_buffer/circle_buffer.cpp ../base/net/net_manager.cpp
-FILE_LIST_NET_CLIENT=./net_client_test.cpp
+LIB_OPTION_NET_SERVER=-I../base -I../base/packet/ -I../base/circle_buffer/ -I../base/net/ -pthread
+LIB_OPTION_NET_CLIENT=-I../base -I../base/packet/
+FILE_LIST_NET_SERVER=./net_server_test.cpp ../base/packet/packet.cpp ../base/circle_buffer/circle_buffer.cpp ../base/net/session.cpp ../base/net/net_manager.cpp
+FILE_LIST_NET_CLIENT=./net_client_test.cpp ../base/packet/packet.cpp
 net_test:$(FILE_LIST_NET_SERVER) $(FILE_LIST_NET_CLIENT)
 	g++ $(FILE_LIST_NET_SERVER) -o net_server_test $(LIB_OPTION_BASE) $(LIB_OPTION_NET_SERVER)
 	g++ $(FILE_LIST_NET_CLIENT) -o net_client_test $(LIB_OPTION_BASE) $(LIB_OPTION_NET_CLIENT)

@@ -169,7 +169,7 @@ void NetManager::EventPollIn(uint32_t events, int fd)
 	ssize_t len = read(fd, buf, std::min(it->second->GetRecvMaxSize(), MAX_BUF_SIZE));
 	if (len > 0)
 	{
-		NLOG("NetManager::EventPollIn:events=%u, fd=%d, buf=%s", events, fd, buf);
+		NLOG("NetManager::EventPollIn:events=%u, fd=%d, len=%zu", events, fd, len);
 		it->second->OnRecv(buf, len);
 	}
 	else if ((len == -1 && errno == EINTR) || errno == EAGAIN)

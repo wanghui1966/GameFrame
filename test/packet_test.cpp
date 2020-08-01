@@ -72,8 +72,8 @@ void test_struct()
 	Data server_data;
 
 	// 解包
-	Packet server_packet(6666, client_packet.GetDataLength());
-	server_packet.UnpackageData(buf, buf_size);
+	Packet server_packet(6666, buf_size - PACKET_HEADER_SIZE);
+	server_packet.UnpackageData(buf + PACKET_HEADER_SIZE, buf_size - PACKET_HEADER_SIZE);
 	server_data.PacketTo(server_packet);
 
 	std::string server_data_str;
@@ -112,14 +112,13 @@ void test_pb()
 	memcpy(buf, client_packet.GetData(), buf_size);
 	
 	// 服务器数据
-	uint32_t server_data_length = client_packet.GetDataLength();
 	char *server_data = new char[buf_size + 1];
 	memset(server_data, 0, buf_size + 1);
 
 	// 解包
-	Packet server_packet(6666, server_data_length);
-	server_packet.UnpackageData(buf, buf_size);
-	server_packet.PopValue(server_data, server_data_length);
+	Packet server_packet(6666, buf_size - PACKET_HEADER_SIZE);
+	server_packet.UnpackageData(buf + PACKET_HEADER_SIZE, buf_size - PACKET_HEADER_SIZE);
+	server_packet.PopValue(server_data, buf_size - PACKET_HEADER_SIZE);
 
 	PB::common_info server_pb;
 	server_pb.ParseFromString(server_data);

@@ -12,6 +12,8 @@
 #include "debug.h"
 #include <cstring>
 
+#include "packet.h"
+
 const int MAX_BUF_LEN = 1024;	// buf长度
 #define SERVER_IP "127.0.0.1"
 #define SERVER_PORT 6666
@@ -51,12 +53,19 @@ void ClientFunc()
 	{
 		sleep(3);
 
-		memset(buf, 0, MAX_BUF_LEN);
-		snprintf(buf, MAX_BUF_LEN, "hello server(ip=%s, port=%u, pid=%d, send_index=%d).", client_ip, client_port, getpid(), send_index++);
-		write(fd, buf, strlen(buf));
+		Data client_data('a', 'c', true, -2, 9, -98, 89, -4343423233343, 321298765678, 7.2, 8.9, "123456789abcdefghijklmnopqrstuvwxyz");
 
-		NLOG("ClientFunc send success:buf=[%s]", buf);
+		// 组装包
+		Packet client_packet(6666);
+		client_data.ToPacket(client_packet);
+
+		// 模拟发包之前打包
+		client_packet.PackageData();
+
+		write(fd, client_packet.GetData(), client_packet.GetSize());
+
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		break;
 	}
 
 	close(fd);
