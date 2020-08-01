@@ -54,10 +54,11 @@ public:
 				break;
 			}
 
+			char temp_buf[SESSION_CIRCLE_BUFFER_CAPACITY];
 			m_recv_buf.Read(temp_buf, length);
+			NLOG("Session::OnRecv:session_id=%d, buf=%s", m_session_id, temp_buf);
 		}
 
-		NLOG("Session::OnRecv:session_id=%d, buf=%s", m_session_id, temp_buf);
 		return true;
 	}
 

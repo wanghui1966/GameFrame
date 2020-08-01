@@ -1,6 +1,5 @@
 
-protobuf/cpp/*.h
-protobuf/cpp/*.cc
+protobuf/cpp
 
 third_party_lib/log4cplus
 third_party_lib/redis

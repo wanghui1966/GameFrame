@@ -81,20 +81,20 @@ net_test:$(FILE_LIST_NET_SERVER) $(FILE_LIST_NET_CLIENT)
 
 .PHONY:clean
 clean:
-	/usr/bin/rm -f common_test
-	/usr/bin/rm -f log4cplus_test
-	/usr/bin/rm -f singleton_test
-	/usr/bin/rm -f thread_pool_test
-	/usr/bin/rm -f protobuf_test
-	/usr/bin/rm -f thread_safe_container_test
-	/usr/bin/rm -f packet_test
-	/usr/bin/rm -f object_pool_test
-	/usr/bin/rm -f timer_test
-	/usr/bin/rm -f shm_master_test
-	/usr/bin/rm -f shm_slave_test
-	/usr/bin/rm -f patch_test
-	/usr/bin/rm -f libpatch.so
-	/usr/bin/rm -f redis_test
-	/usr/bin/rm -f circle_buffer_test
-	/usr/bin/rm -f net_server_test
-	/usr/bin/rm -f net_client_test
+	rm -f common_test
+	rm -f log4cplus_test
+	rm -f singleton_test
+	rm -f thread_pool_test
+	rm -f protobuf_test
+	rm -f thread_safe_container_test
+	rm -f packet_test
+	rm -f object_pool_test
+	rm -f timer_test
+	rm -f shm_master_test
+	rm -f shm_slave_test
+	rm -f patch_test
+	rm -f libpatch.so
+	rm -f redis_test
+	rm -f circle_buffer_test
+	rm -f net_server_test
+	rm -f net_client_test

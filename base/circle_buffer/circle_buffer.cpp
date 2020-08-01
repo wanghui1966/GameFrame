@@ -1,5 +1,6 @@
 #include "circle_buffer.h"
 
+#include "../packet/packet.h"
 #include <cstring>
 
 #include "debug.h"
