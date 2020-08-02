@@ -190,3 +190,61 @@ int CircleBuffer::GetPacketDataLength()
 
 	return *((uint32_t*)buf);
 }
+
+void CircleBuffer::TryDecode()
+{
+	while (true)
+	{
+		uint32_t data_length = GetPacketDataLength();
+		if (data_length == 0)
+		{
+			break;
+		}
+
+		int length = data_length + PACKET_HEADER_SIZE;
+		if (length < GetCanReadSize())
+		{
+			break;
+		}
+		bool use_circle = (m_read_pos + length <= m_buf_capacity);
+
+		uint32_t opcode = 0;
+		Data server_data;
+		std::string server_data_str;
+		if (use_circle)
+		{
+			// 所有可读数据都在右边
+
+			uint32_t temp_data_length = *((uint32_t*)(m_buf + m_read_pos));
+			m_read_pos += PACKET_DATA_LENGTH_SIZE;
+
+			opcode = *((uint32_t*)(m_buf + m_read_pos));
+			m_read_pos += PACKET_OPCODE_SIZE;
+
+			// 解包
+			Packet server_packet(opcode, data_length);
+			server_packet.UnpackageData(m_buf + m_read_pos, data_length);
+			m_read_pos += data_length;
+			server_data.PacketTo(server_packet);
+
+			server_data.GetStr(server_data_str);
+		}
+		else
+		{
+			// 可读数据分布在环形缓冲区的最前面和最后面，还是读出来吧！
+
+			char temp_buf[PACKET_MAX_SIZE] = {0};
+			Read(temp_buf, length);
+
+			opcode = *((uint32_t*)(temp_buf + PACKET_DATA_LENGTH_SIZE));
+
+			// 解包
+			Packet server_packet(opcode, data_length);
+			server_packet.UnpackageData(temp_buf + PACKET_HEADER_SIZE, data_length);
+			server_data.PacketTo(server_packet);
+
+			server_data.GetStr(server_data_str);
+		}
+		NLOG("CircleBuffer::TryDecode:opcode=%u, use_circle=%d, data_length=%u, data=[%s]", opcode, use_circle, data_length, server_data_str.c_str());
+	}
+}

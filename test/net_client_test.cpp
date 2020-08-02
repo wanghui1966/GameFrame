@@ -65,7 +65,6 @@ void ClientFunc()
 		write(fd, client_packet.GetData(), client_packet.GetSize());
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-		break;
 	}
 
 	close(fd);

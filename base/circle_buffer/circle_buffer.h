@@ -26,6 +26,7 @@ public:
 
 public:
 	int GetPacketDataLength();
+	void TryDecode();
 
 protected:
 	char					*m_buf	= nullptr;		// 环形缓冲区
