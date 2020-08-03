@@ -2,7 +2,7 @@
 #include "task.h"
 #include "worker.h"
 
-#include "debug.h"
+#include "../debug.h"
 
 ThreadPool::ThreadPool(uint32_t pool_size)
 : m_pool_size(pool_size)

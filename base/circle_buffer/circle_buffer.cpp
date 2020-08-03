@@ -3,7 +3,7 @@
 #include "../packet/packet.h"
 #include <cstring>
 
-#include "debug.h"
+#include "../debug.h"
 
 CircleBuffer::CircleBuffer(int buf_capacity) : m_buf_capacity(buf_capacity)
 {

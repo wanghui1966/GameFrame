@@ -67,7 +67,7 @@ redis_test:$(FILE_LIST_REDIS)
 	g++ $(FILE_LIST_REDIS) -o redis_test $(LIB_OPTION_BASE) $(LIB_OPTION_REDIS)
 
 LIB_OPTION_CIRCLE_BUFFER=-I../base -I../base/circle_buffer
-FILE_LIST_CIRCLE_BUFFER=./circle_buffer_test.cpp ../base/circle_buffer/circle_buffer.cpp
+FILE_LIST_CIRCLE_BUFFER=./circle_buffer_test.cpp ../base/packet/packet.cpp ../base/circle_buffer/circle_buffer.cpp
 circle_buffer_test:$(FILE_LIST_CIRCLE_BUFFER)
 	g++ $(FILE_LIST_CIRCLE_BUFFER) -o circle_buffer_test $(LIB_OPTION_BASE) $(LIB_OPTION_CIRCLE_BUFFER)
 
