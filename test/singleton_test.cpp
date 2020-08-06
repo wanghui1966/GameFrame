@@ -5,21 +5,21 @@
 class Wind : public Singleton<Wind>
 {
 public:
-    Wind() { NLOG("Wind constructor"); }
-    ~Wind() { NLOG("Wind destructor"); }
+	Wind() { NLOG("Wind constructor"); }
+	~Wind() { NLOG("Wind destructor"); }
 
-    void Output() { NLOG("Wind Output"); }
+	void Output() { NLOG("Wind Output"); }
 };
 
 #define sWind (*Wind::Instance())
 
 int main()
 {
-    sWind.NewInstance();
+	sWind.NewInstance();
 
-    sWind.Output();
-    sWind.Output();
+	sWind.Output();
+	sWind.Output();
 
-    sWind.DeleteInstance();
-    return 0;
+	sWind.DeleteInstance();
+	return 0;
 }

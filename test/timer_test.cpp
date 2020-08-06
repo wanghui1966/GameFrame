@@ -12,21 +12,21 @@ void circle_task_test(int task_id);
 class CircleTaskTest : public Task
 {
 public:
-    CircleTaskTest() : m_task_id(0) {}
-    CircleTaskTest(uint32_t task_id) : m_task_id(task_id) {}
-    virtual ~CircleTaskTest(){}
-    
-    virtual void Run()
-    {
+	CircleTaskTest() : m_task_id(0) {}
+	CircleTaskTest(uint32_t task_id) : m_task_id(task_id) {}
+	virtual ~CircleTaskTest(){}
+
+	virtual void Run()
+	{
 		NLOG("CricleTaskTest::Run begin:task=%u", m_task_id);
 		std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 		NLOG("CricleTaskTest::Run end:task=%u", m_task_id);
 		circle_task_test(++m_task_id);
 		delete this;
-    }
+	}
 
 protected:
-    uint32_t                m_task_id = 0;
+	uint32_t				m_task_id = 0;
 };
 void circle_task_test(int task_id)
 {
@@ -51,7 +51,7 @@ public:
 	}
 
 protected:
-    uint32_t                m_task_id = 0;
+	uint32_t				m_task_id = 0;
 };
 void once_task_test(int task_id)
 {

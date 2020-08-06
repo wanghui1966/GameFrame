@@ -7,11 +7,11 @@
 
 int main()
 {
-    sLog.NewInstance();
-    sLog.Init("../config/log.properties");
+	sLog.NewInstance();
+	sLog.Init("../config/log.properties");
 
-    std::thread th([=]{ while(true) {sLog.Update();} });
-    th.detach();
+	std::thread th([=]{ while(true) {sLog.Update();} });
+	th.detach();
 
 	while (true)
 	{
@@ -40,6 +40,6 @@ int main()
 		usleep(rand() % 100000 + 1);
 	}
 
-    sLog.DeleteInstance();
-    return 0;
+	sLog.DeleteInstance();
+	return 0;
 }
