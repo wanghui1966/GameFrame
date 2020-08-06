@@ -1,6 +1,6 @@
 #include "timer.h"
-#include "../thread_pool/task.h"
-#include "../common.h"
+#include "task.h"
+#include "common.h"
 
 #include <thread>
 #include <chrono>

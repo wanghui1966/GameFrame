@@ -13,7 +13,7 @@ const int SESSION_CIRCLE_BUFFER_CAPACITY = 256;
 class Session
 {
 public:
-	explicit Session(int session_id) : m_session_id(session_id), m_recv_buf(SESSION_CIRCLE_BUFFER_CAPACITY), m_send_buf(SESSION_CIRCLE_BUFFER_CAPACITY) {}
+	explicit Session(int session_id, int fd) : m_session_id(session_id), m_fd(fd), m_recv_buf(SESSION_CIRCLE_BUFFER_CAPACITY), m_send_buf(SESSION_CIRCLE_BUFFER_CAPACITY) {}
 	virtual ~Session() {}
 
 public:
@@ -21,15 +21,15 @@ public:
 
 public:
 	int GetRecvMaxSize() const;
-	bool CanRecv(int size) const;
 	bool OnRecv(const char *buf, int size);
 
 	int GetSendMaxSize() const;
-	bool CanSend(int size) const;
-	bool OnSend(char *buf, int size);
+	bool Send(Packet &packet);
+	bool OnSend();
 
 protected:
 	int							m_session_id = 0;
+	int							m_fd = 0;
 
 	CircleBuffer				m_recv_buf;
 	CircleBuffer				m_send_buf;

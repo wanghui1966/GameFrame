@@ -15,6 +15,7 @@
 
 #include <string>
 #include <map>
+#include <set>
 
 #include "../singleton.h"
 
@@ -35,6 +36,7 @@ const int MAX_FD_NUM = 1024;
 
 extern int errno;
 
+class Packet;
 class Session;
 class NetManager : public Singleton<NetManager>
 {
@@ -46,6 +48,8 @@ public:
 	bool Init(const std::string &server_ip = "127.0.0.1", in_port_t server_port = 6666);
 	bool Open();
 	void Heartbeat();
+	bool Send(int session_id, Packet &packet);
+	void SendReady(int session_id);
 
 protected:
 	// 监听套接字
@@ -55,7 +59,7 @@ protected:
 	void EventPollIn(uint32_t events, int fd);
 
 	// 可写事件
-	void EventPollOut(uint32_t events, int fd);
+	bool EventPollOut(uint32_t events, int fd);
 
 	// 关闭连接事件
 	void EventPollClose(uint32_t events, int fd);
@@ -66,7 +70,10 @@ protected:
 
 	int						m_listen_fd = 0;			// 监听套接字
 	int						m_epoll_fd = 0;				// 读写套接字
-	std::map<int, Session*>	m_connect_session;			// 所有的连接套接字
+	std::map<int, Session*>	m_connect_session;			// 所有的连接套接字，key=fd
+	std::map<int, int>		m_session_fd;				// session_id和fd的映射关系，key=session，value=fd
+
+	std::set<int>			m_ready_write_fd;			// 所有准备好投递写请求的套接字
 
 	static int				m_session_count;			// 分配过的session的数量
 };

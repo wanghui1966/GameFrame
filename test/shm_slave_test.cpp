@@ -1,5 +1,5 @@
-#include "../common.h"
-#include "../shm/shm_manager.h"
+#include "common.h"
+#include "shm_manager.h"
 
 #include <cassert>
 #include <ctime>

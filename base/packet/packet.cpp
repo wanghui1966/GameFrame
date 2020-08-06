@@ -38,7 +38,7 @@ void Packet::PackageData()
 {
 	m_data_length = m_pos - PACKET_HEADER_SIZE;
 	memcpy(m_data, (char*)&m_data_length, PACKET_DATA_LENGTH_SIZE);
-	NLOG("Packet::PackageData:opcode=%u, data_length=%u", m_opcode, m_data_length);
+	DLOG("Packet::PackageData:opcode=%u, data_length=%u", m_opcode, m_data_length);
 }
 
 bool Packet::UnpackageData(const char *data_buf, uint32_t data_length)
@@ -50,6 +50,6 @@ bool Packet::UnpackageData(const char *data_buf, uint32_t data_length)
 	m_pos = PACKET_HEADER_SIZE;
 	m_size = PACKET_HEADER_SIZE + m_data_length;
 
-	NLOG("Packet::UnpackageData:opcode=%u, data_length=%u", m_opcode, m_data_length);
+	DLOG("Packet::UnpackageData:opcode=%u, data_length=%u", m_opcode, m_data_length);
 	return true;
 }

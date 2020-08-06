@@ -2,7 +2,7 @@
 
 #include <string>
 #include <cstring>
-#include "../protobuf/cpp/common.pb.h"
+#include "common.pb.h"
 
 #include "debug.h"
 

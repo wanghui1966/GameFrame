@@ -4,8 +4,10 @@
 #define COMMON_STRING_H
 
 #include <algorithm>
+#include <sstream>
 #include <string>
 #include <vector>
+#include <set>
 
 class StringHelper
 {
@@ -40,6 +42,52 @@ public:
 			}
 		}
 		return result;
+	}
+
+	template<typename T>
+	static void GetVectorStr(const std::vector<T> &arr, std::string &str)
+	{
+		if (arr.empty())
+		{
+			return;
+		}
+
+		std::stringstream ss;
+		ss << "<";
+		for (int i = 0; i < arr.size(); ++i)
+		{
+			if (i > 0)
+			{
+				ss << ", ";
+			}
+			ss << arr[i];
+		}
+		ss << ">";
+
+		str = ss.str();
+	}
+
+	template<typename T>
+	static void GetSetStr(const std::set<T> &arr, std::string &str)
+	{
+		if (arr.empty())
+		{
+			return;
+		}
+
+		std::stringstream ss;
+		ss << "<";
+		for (auto it = arr.begin(); it != arr.end(); ++it)
+		{
+			if (it != arr.begin())
+			{
+				ss << ", ";
+			}
+			ss << *it;
+		}
+		ss << ">";
+
+		str = ss.str();
 	}
 
 	static std::string ToUpper(const std::string& str)

@@ -6,7 +6,7 @@ ulimit -c unlimited
 ulimit -n 4096
 
 # 客户端数量
-CLIENT_COUNT=2
+CLIENT_COUNT=10
 
 for i in `seq $CLIENT_COUNT`
 do

@@ -4,8 +4,8 @@ package PB;
 
 enum DATA_TYPE
 {
-	DT_GET_COMMON_INFO_REQ				= 0;	// 获取通用信息请求
-	DT_GET_COMMON_INFO_RSP				= 1;	// 获取通用信息返回
+	DT_GET_COMMON_INFO_REQ				= 10000;	// 获取通用信息请求
+	DT_GET_COMMON_INFO_RSP				= 10001;	// 获取通用信息返回
 }
 
 message dt_get_common_info_req

@@ -26,7 +26,9 @@ public:
 
 public:
 	int GetPacketDataLength();
-	void TryDecode();
+	void TryDecode(int session_id);
+
+	bool OnSend(int session_id, int fd);
 
 protected:
 	char					*m_buf	= nullptr;		// 环形缓冲区

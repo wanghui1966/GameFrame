@@ -1,7 +1,10 @@
 #include "circle_buffer.h"
 
 #include "../packet/packet.h"
+#include "../game_command.h"
 #include <cstring>
+
+#include <unistd.h>
 
 #include "../debug.h"
 
@@ -9,12 +12,12 @@ CircleBuffer::CircleBuffer(int buf_capacity) : m_buf_capacity(buf_capacity)
 {
 	m_buf = new char[m_buf_capacity];
 	memset(m_buf, 0, m_buf_capacity);
-	NLOG("CircleBuffer create success:buf_capacity=%d", m_buf_capacity);
+	DLOG("CircleBuffer create success:buf_capacity=%d", m_buf_capacity);
 }
 
 CircleBuffer::~CircleBuffer()
 {
-	NLOG("CircleBuffer destory success");
+	DLOG("CircleBuffer destory success");
 	if (m_buf)
 	{
 		delete m_buf;
@@ -30,7 +33,7 @@ CircleBuffer::CircleBuffer(const CircleBuffer &cb)
 	memset(m_buf, 0, m_buf_capacity);
 	this->m_read_pos = cb.m_read_pos;
 	this->m_write_pos = cb.m_write_pos;
-	NLOG("CircleBuffer copy success:buf_capacity=%d", m_buf_capacity);
+	DLOG("CircleBuffer copy success:buf_capacity=%d", m_buf_capacity);
 }
 
 CircleBuffer& CircleBuffer::operator=(const CircleBuffer &cb)
@@ -47,7 +50,7 @@ CircleBuffer& CircleBuffer::operator=(const CircleBuffer &cb)
 		memset(m_buf, 0, m_buf_capacity);
 		this->m_read_pos = cb.m_read_pos;
 		this->m_write_pos = cb.m_write_pos;
-		NLOG("CircleBuffer = success:buf_capacity=%d", m_buf_capacity);
+		DLOG("CircleBuffer = success:buf_capacity=%d", m_buf_capacity);
 	}
 	return *this;
 }
@@ -109,7 +112,7 @@ bool CircleBuffer::Write(const char *buf, int size)
 		m_write_pos += size;
 	}
 
-	NLOG("CircleBuffer::Write success:buf=%p, size=%d, write_pos=%d", buf, size, m_write_pos);
+	DLOG("CircleBuffer::Write success:buf=%p, size=%d, write_pos=%d", buf, size, m_write_pos);
 	return true;
 }
 
@@ -171,7 +174,7 @@ bool CircleBuffer::Read(char *buf, int size, bool change_read_pos/* = true*/)
 		}
 	}
 
-	NLOG("CircleBuffer::Read success:buf=%p, size=%d, change_read_pos=%d, read_pos=%d", buf, size, change_read_pos, m_read_pos);
+	DLOG("CircleBuffer::Read success:buf=%p, size=%d, change_read_pos=%d, read_pos=%d", buf, size, change_read_pos, m_read_pos);
 	return true;
 }
 
@@ -191,7 +194,7 @@ int CircleBuffer::GetPacketDataLength()
 	return *((uint32_t*)buf);
 }
 
-void CircleBuffer::TryDecode()
+void CircleBuffer::TryDecode(int session_id)
 {
 	while (true)
 	{
@@ -202,15 +205,13 @@ void CircleBuffer::TryDecode()
 		}
 
 		int length = data_length + PACKET_HEADER_SIZE;
-		if (length < GetCanReadSize())
+		if (GetCanReadSize() < length)
 		{
 			break;
 		}
 		bool use_circle = (m_read_pos + length <= m_buf_capacity);
 
 		uint32_t opcode = 0;
-		Data server_data;
-		std::string server_data_str;
 		if (use_circle)
 		{
 			// 所有可读数据都在右边
@@ -225,9 +226,7 @@ void CircleBuffer::TryDecode()
 			Packet server_packet(opcode, data_length);
 			server_packet.UnpackageData(m_buf + m_read_pos, data_length);
 			m_read_pos += data_length;
-			server_data.PacketTo(server_packet);
-
-			server_data.GetStr(server_data_str);
+			sGameCommand.Command(session_id, opcode, data_length, server_packet);
 		}
 		else
 		{
@@ -241,10 +240,48 @@ void CircleBuffer::TryDecode()
 			// 解包
 			Packet server_packet(opcode, data_length);
 			server_packet.UnpackageData(temp_buf + PACKET_HEADER_SIZE, data_length);
-			server_data.PacketTo(server_packet);
-
-			server_data.GetStr(server_data_str);
+			sGameCommand.Command(session_id, opcode, data_length, server_packet);
 		}
-		NLOG("CircleBuffer::TryDecode:opcode=%u, use_circle=%d, data_length=%u, data=[%s]", opcode, use_circle, data_length, server_data_str.c_str());
+		DLOG("CircleBuffer::TryDecode:session_id=%d, opcode=%u, use_circle=%d, data_length=%u", session_id, opcode, use_circle, data_length);
 	}
+}
+
+bool CircleBuffer::OnSend(int session_id, int fd)
+{
+	int can_read_size = GetCanReadSize();
+	if (can_read_size <= 0)
+	{
+		ELOG("CircleBuffer::OnSend fail for no data:session_id=%d, fd=%d, write_pos=%d, read_pos=%d", session_id, fd, m_write_pos, m_read_pos);
+		return false;
+	}
+
+	int success_size = 0;
+	if (m_read_pos < m_write_pos)
+	{
+		// 所有可写数据都在右边
+		int write_size = write(fd, m_buf + m_read_pos, can_read_size);
+		m_read_pos += write_size;
+		success_size += write_size;
+		DLOG("CircleBuffer::OnSend:session_id=%d, fd=%d, can_read_size=%d, write_size=%d", session_id, fd, can_read_size, write_size);
+	}
+	else
+	{
+		// 可写数据分布在环形缓冲区的最前面和最后面，分两部分发送
+		int right_size = m_buf_capacity - m_read_pos;
+		int write_size = write(fd, m_buf + m_read_pos, right_size);
+		m_read_pos = 0;
+		success_size += write_size;
+		DLOG("CircleBuffer::OnSend right:session_id=%d, fd=%d, can_read_size=%d, right_size=%d, write_size=%d", session_id, fd, can_read_size, right_size, write_size);
+		if (write_size == right_size)
+		{
+			write_size = write(fd, m_buf, can_read_size - right_size);
+			m_read_pos += write_size;
+			success_size += write_size;
+			DLOG("CircleBuffer::OnSend left:session_id=%d, fd=%d, can_read_size=%d, right_size=%d, write_size=%d", session_id, fd, can_read_size, right_size, write_size);
+		}
+	}
+
+	bool send_finish = (GetCanReadSize() == 0);
+	DLOG("CircleBuffer::OnSend:session_id=%d, fd=%d, can_read_size=%d, success_size=%d, send_finish=%d", session_id, fd, can_read_size, success_size, send_finish);
+	return send_finish;
 }
