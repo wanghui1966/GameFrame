@@ -125,6 +125,7 @@ void NetManager::SendReady(int session_id)
 
 void NetManager::Heartbeat()
 {
+	// 需要发送数据的套接字的监听事件加入EPOLLOUT
 	if (!m_ready_write_fd.empty())
 	{
 		std::set<int> need_remove_fd;
@@ -181,6 +182,7 @@ void NetManager::Heartbeat()
 		}
 	}
 
+	// 数据发送完毕，套接字的监听事件去掉EPOLLOUT
 	if (!write_ok_fd.empty())
 	{
 		struct epoll_event ev;
