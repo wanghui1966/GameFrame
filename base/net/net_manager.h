@@ -19,8 +19,7 @@
 
 #include "../singleton.h"
 
-// 客户端已经发起连接 且 还未被服务器accept 的连接总数量
-// 未完成连接队列(三次握手还未完成) + 已完成连接队列(三次握手已完成) 总和
+// 服务器收到客户端的ack包完成三次连接，等待accept函数的队列长度，取此值和/proc/sys/net/core/somaxconn的最小值。
 const int BACKLOG = 5;
 
 const int MAX_BUF_SIZE = 1024;
