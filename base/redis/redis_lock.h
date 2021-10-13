@@ -7,11 +7,23 @@
 
 const int REDIS_LOCK_EXPIRE_TIME = 10;			// 锁的超时时间
 
+// 应该来源于配置
+const int LOCAL_DATA_CENTER_ID = 6666;
+const int LOCAL_MACHINE_ID = 8888;
+
+// 使用此类前，须先初始化RedisManager！！！
 class RedisLock
 {
 public:
-	RedisLock() {}
-	RedisLock(int continue_count, int continue_time) : m_expire_continue_count(continue_count), m_expire_continue_time(continue_time) {}
+	RedisLock()
+	RedisLock(int continue_count, int continue_time);
+
+public:
+	bool Lock();
+	bool Unlock();
+
+protected:
+	void Init();
 
 protected:
 	int64_t m_reids_lock_key						= 0;		// 锁的名字，用来区分，避免被其他进程给删除了

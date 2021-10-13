@@ -1,10 +1,13 @@
 
 #include "debug.h"
 #include "common.h"
+#include "common_string.h"
 
-const char *HOST = "10.236.100.244";
+//const char *HOST = "10.236.100.244";
+const char *HOST = "127.0.0.1";
 const uint32_t PORT = 6379;
-const char *PASSWORD = "foobared";
+//const char *PASSWORD = "foobared";
+const char *PASSWORD = "huiwang";
 
 #include "hiredis.h"
 void TestRedis()
@@ -197,15 +200,27 @@ void TestRedisManager()
 			break;
 		}
 
-		std::string error;
-		int ret = sRedisManager.ExecuteCommandReturnError(error, "set user huiwang");
-		NLOG("ExecuteCommandReturnError:ret=%d, error=%s", ret, error.c_str());
-		std::string result;
-		ret = sRedisManager.ExecuteCommandReturnString(result, "get user");
-		NLOG("ExecuteCommandReturnString:ret=%d, result=%s", ret, result.c_str());
-		long long del_num;
-		ret = sRedisManager.ExecuteCommandReturnInteger(del_num, "del user1 user2");
-		NLOG("ExecuteCommandReturnString:ret=%d, del_num=%ld", ret, del_num);
+		{
+			int ret = 0;
+
+			//std::string error;
+			//ret = sRedisManager.ExecuteCommandReturnError(error, "set user huiwang");
+			//NLOG("ExecuteCommandReturnError:ret=%d, error=%s", ret, error.c_str());
+
+			//std::string result;
+			//ret = sRedisManager.ExecuteCommandReturnString(result, "getset user1 xxxx");
+			//NLOG("ExecuteCommandReturnString:ret=%d, result=%s", ret, result.c_str());
+
+			//long long del_num;
+			//ret = sRedisManager.ExecuteCommandReturnInteger(del_num, "del user1 user2");
+			//NLOG("ExecuteCommandReturnString:ret=%d, del_num=%ld", ret, del_num);
+
+			std::vector<std::string> results;
+			ret = sRedisManager.ExecuteCommandReturnStrings(results, "mget user1 user");
+			std::string results_str;
+			StringHelper::GetVectorStr<std::string>(results, results_str);
+			NLOG("ExecuteCommandReturnStrings:ret=%d, results=%s", ret, results_str.c_str());
+		}
 
 		//Redis *redis = sRedisManager.Get();
 		//if (redis)

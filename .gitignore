@@ -9,6 +9,9 @@ log/server/*log*
 log/groot/*log*
 log/redis/*log*
 
+data/redis/appendonly.aof
+data/redis/dump.rdb
+
 test/nohup.out
 test/log/*
 
@@ -29,3 +32,4 @@ test/redis_test
 test/circle_buffer_test
 test/net_server_test
 test/net_client_test
+test/snow_flake_test

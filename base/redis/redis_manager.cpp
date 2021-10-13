@@ -5,6 +5,11 @@
 #include "../debug.h"
 #include "../scope_guard.h"
 
+RedisReply::RedisReply(redisReply *redis_reply)
+{
+	SetRedisReply(redis_reply);
+}
+
 RedisReply::~RedisReply()
 {
 	SetRedisReply(nullptr);
@@ -24,14 +29,14 @@ redisReply* RedisReply::GetReply() const
 	return m_redis_reply;
 }
 
-bool RedisReply::IsString() const
-{
-	return (m_redis_reply && m_redis_reply->type == REDIS_REPLY_STRING && m_redis_reply->len > 0);
-}
-
 bool RedisReply::IsArray() const
 {
 	return (m_redis_reply && m_redis_reply->type == REDIS_REPLY_ARRAY && m_redis_reply->elements > 0);
+}
+
+bool RedisReply::IsString() const
+{
+	return (m_redis_reply && m_redis_reply->type == REDIS_REPLY_STRING && m_redis_reply->len > 0);
 }
 
 bool RedisReply::IsInteger() const
@@ -54,18 +59,7 @@ bool RedisReply::IsError() const
 	return (m_redis_reply && m_redis_reply->type == REDIS_REPLY_ERROR);
 }
 
-bool RedisReply::GetString(std::string &data) const
-{
-	if (!IsString())
-	{
-		return false;
-	}
-
-	data = m_redis_reply->str;
-	return true;
-}
-
-bool RedisReply::GetArray(std::vector<struct redisReply*> &data) const
+bool RedisReply::GetArrayStrings(std::vector<std::string> &datas) const
 {
 	if (!IsArray())
 	{
@@ -74,8 +68,25 @@ bool RedisReply::GetArray(std::vector<struct redisReply*> &data) const
 
 	for (size_t i = 0; i < m_redis_reply->elements; ++i)
 	{
-		data.push_back(*(m_redis_reply->element + i));
+		redisReply *r = *(m_redis_reply->element + i);
+		if (!r || r->type != REDIS_REPLY_STRING || r->len <= 0)
+		{
+			datas.clear();
+			return false;
+		}
+		datas.emplace_back(r->str);
 	}
+	return true;
+}
+
+bool RedisReply::GetString(std::string &data) const
+{
+	if (!IsString())
+	{
+		return false;
+	}
+
+	data = m_redis_reply->str;
 	return true;
 }
 
@@ -468,6 +479,18 @@ int RedisManager::ExecuteCommandReturnString(std::string &result, const char *fo
 	return 0;
 }
 
+int RedisManager::ExecuteCommandReturnStrings(std::vector<std::string> &results, const char *format, ...)
+{
+	EXECUTE_COMMAND_COMMON
+
+	if (!redis_reply.GetArrayStrings(results))
+	{
+		return -4;
+	}
+
+	return 0;
+}
+
 
 bool RedisManager::AppendPool(int inc_count)
 {
@@ -488,7 +511,7 @@ bool RedisManager::AppendPool(int inc_count)
 		}
 
 		redis->SetIndex(m_pool.size() + 1);
-		m_pool.push_back(std::make_tuple(false, redis));
+		m_pool.emplace_back(std::make_tuple(false, redis));
 		++success_count;
 	}
 	NLOG("RedisManager::AppendPool success:inc_count=%d, success_count=%d, cur_count=%d", inc_count, success_count, (int)m_pool.size());
