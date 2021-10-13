@@ -88,6 +88,19 @@ public:
 	Redis* Get();
 	void Put(Redis *redis);
 
+public:
+	// set
+	int ExecuteCommandReturnError(std::string &error, const char *format, ...);
+
+	int ExecuteCommandReturnStatus(std::string &result, const char *format, ...);
+
+	// del，返回删除数量
+	int ExecuteCommandReturnInteger(long long &result, const char *format, ...);
+
+	// script load
+	// get，不存在的key会失败
+	int ExecuteCommandReturnString(std::string &result, const char *format, ...);
+
 protected:
 	bool AppendPool(int inc_count);
 

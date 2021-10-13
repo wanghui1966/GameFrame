@@ -2,17 +2,21 @@
 #include "debug.h"
 #include "common.h"
 
+const char *HOST = "10.236.100.244";
+const uint32_t PORT = 6379;
+const char *PASSWORD = "foobared";
+
 #include "hiredis.h"
 void TestRedis()
 {
 	NLOG("============TestRedis begin============");
-	redisContext *conn = redisConnect("127.0.0.1", 6379);
+	redisContext *conn = redisConnect(HOST, PORT);
 	if (!conn || conn->err)
 	{
 		ELOG("connect err");
 	}
 
-	redisReply *reply = (redisReply*)redisCommand(conn, "AUTH huiwang");
+	redisReply *reply = (redisReply*)redisCommand(conn, "AUTH %s", PASSWORD);
 	NLOG("AUTH:%s", reply->str);
 	reply = (redisReply*)redisCommand(conn, "PING");
 	NLOG("PING:%s", reply->str);
@@ -29,7 +33,7 @@ void TestHiRedis()
 	do
 	{
 		Redis redis;
-		if (!redis.Init("127.0.0.1", 6379, "huiwang"))
+		if (!redis.Init(HOST, PORT, PASSWORD))
 		{
 			break;
 		}
@@ -102,7 +106,7 @@ void TestRedisManagerThread()
 
 	do
 	{
-		if (!sRedisManager.Init("127.0.0.1", 6379, "huiwang"))
+		if (!sRedisManager.Init(HOST, PORT, PASSWORD))
 		{
 			break;
 		}
@@ -188,29 +192,39 @@ void TestRedisManager()
 
 	do
 	{
-		if (!sRedisManager.Init("127.0.0.1", 6379, "huiwang"))
+		if (!sRedisManager.Init(HOST, PORT, PASSWORD))
 		{
 			break;
 		}
 
-		Redis *redis = sRedisManager.Get();
-		if (redis)
-		{
-			SCOPE_GUARD([&]{ sRedisManager.Put(redis); });
+		std::string error;
+		int ret = sRedisManager.ExecuteCommandReturnError(error, "set user huiwang");
+		NLOG("ExecuteCommandReturnError:ret=%d, error=%s", ret, error.c_str());
+		std::string result;
+		ret = sRedisManager.ExecuteCommandReturnString(result, "get user");
+		NLOG("ExecuteCommandReturnString:ret=%d, result=%s", ret, result.c_str());
+		long long del_num;
+		ret = sRedisManager.ExecuteCommandReturnInteger(del_num, "del user1 user2");
+		NLOG("ExecuteCommandReturnString:ret=%d, del_num=%ld", ret, del_num);
 
-			std::string cmd = "set user xiaohuihui_";
-			cmd.append(std::to_string(time(nullptr)));
-			bool is_ok = SetRedis(redis, cmd);
-			NLOG("%s:is_ok=%d", cmd.c_str(), is_ok);
+		//Redis *redis = sRedisManager.Get();
+		//if (redis)
+		//{
+		//	SCOPE_GUARD([&]{ sRedisManager.Put(redis); });
 
-			std::string user;
-			is_ok = GetRedisString(redis, "get user", user);
-			NLOG("get user:is_ok=%d, user=%s", is_ok, user.c_str());
-		}
-		else
-		{
-			ELOG("fail for redis");
-		}
+		//	std::string cmd = "set user xiaohuihui_";
+		//	cmd.append(std::to_string(time(nullptr)));
+		//	bool is_ok = SetRedis(redis, cmd);
+		//	NLOG("%s:is_ok=%d", cmd.c_str(), is_ok);
+
+		//	std::string user;
+		//	is_ok = GetRedisString(redis, "get user", user);
+		//	NLOG("get user:is_ok=%d, user=%s", is_ok, user.c_str());
+		//}
+		//else
+		//{
+		//	ELOG("fail for redis");
+		//}
 	} while(false);
 
 	sRedisManager.DeleteInstance();
@@ -219,9 +233,9 @@ void TestRedisManager()
 
 int main()
 {
-	TestRedis();
-	TestHiRedis();
-	// TestRedisManagerThread();
+	//TestRedis();
+	//TestHiRedis();
+	//TestRedisManagerThread();
 	TestRedisManager();
 	return 0;
 }

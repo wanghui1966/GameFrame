@@ -154,3 +154,12 @@ protobuf/proto/protobuf_factory.cpp
 测试源码：
 test/net_server_test.cpp
 test/net_client_test.cpp
+
+# 14. 雪花算法snow_flake
+雪花算法的实现
+
+源码：
+base/snow_flake.h
+
+测试源码：
+test/snow_flake_test.cpp

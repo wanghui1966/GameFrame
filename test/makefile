@@ -1,5 +1,6 @@
 
-all:common_test log4cplus_test singleton_test thread_pool_test protobuf_test thread_safe_container_test packet_test object_pool_test timer_test shm_test patch_test redis_test circle_buffer_test net_test
+#all:common_test log4cplus_test singleton_test thread_pool_test protobuf_test thread_safe_container_test packet_test object_pool_test timer_test shm_test patch_test redis_test circle_buffer_test net_test snow_flake_test
+all:redis_test
 .PHONY:all
 
 LIB_OPTION_BASE=-std=c++11 -g -I../base -D__NO_DEBUG_LOG
@@ -83,6 +84,11 @@ net_server_test:$(FILE_LIST_NET_SERVER)
 net_client_test:$(FILE_LIST_NET_CLIENT)
 	g++ $(FILE_LIST_NET_CLIENT) -o net_client_test $(LIB_OPTION_BASE) $(LIB_OPTION_NET_CLIENT) $(LIB_OPTION_PROTOBUF)
 
+LIB_OPTION_SNOW_FLAKE=
+FILE_LIST_SNOW_FLAKE=./snow_flake_test.cpp
+snow_flake_test:$(FILE_LIST_SNOW_FLAKE)
+	g++ $(FILE_LIST_SNOW_FLAKE) -o snow_flake_test $(LIB_OPTION_BASE) $(LIB_OPTION_SNOW_FLAKE)
+
 .PHONY:clean
 clean:
 	rm -f common_test
@@ -102,3 +108,4 @@ clean:
 	rm -f circle_buffer_test
 	rm -f net_server_test
 	rm -f net_client_test
+	rm -f snow_flake_test
