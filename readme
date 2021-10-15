@@ -163,3 +163,14 @@ base/snow_flake.h
 
 测试源码：
 test/snow_flake_test.cpp
+
+# 15. redis实现的分布式锁
+
+源码：
+base/redis/redis_manager.h
+base/redis/redis_manager.cpp
+base/redis/redis_lock.h
+base/redis/redis_lock.cpp
+
+测试源码：
+test/redis_lock_test.cpp

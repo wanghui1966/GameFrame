@@ -3,11 +3,11 @@
 #include "common.h"
 #include "common_string.h"
 
-//const char *HOST = "10.236.100.244";
-const char *HOST = "127.0.0.1";
+const char *HOST = "10.236.100.244";
+//const char *HOST = "127.0.0.1";
 const uint32_t PORT = 6379;
-//const char *PASSWORD = "foobared";
-const char *PASSWORD = "huiwang";
+const char *PASSWORD = "foobared";
+//const char *PASSWORD = "huiwang";
 
 #include "hiredis.h"
 void TestRedis()
@@ -120,6 +120,8 @@ void TestRedisManagerThread()
 				Redis *redis = sRedisManager.Get();
 				if (redis)
 				{
+					std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
 					SCOPE_GUARD([&]{ sRedisManager.Put(redis); });
 
 					RedisReply redis_reply;
@@ -141,16 +143,13 @@ void TestRedisManagerThread()
 					}
 					NLOG("PING:%d success:%s", i, status.c_str());
 
-					std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 				}
 				else
 				{
 					ELOG("PING:%d fail for redis", i);
 				}
 			});
-			th.detach();
-
-			std::this_thread::sleep_for(std::chrono::milliseconds(500));
+			th.join();
 		}
 	} while(false);
 
@@ -200,26 +199,42 @@ void TestRedisManager()
 			break;
 		}
 
+		// set，设置/更新key的值，带ex/px为设置/更新过期时间(秒/毫秒)，带nx为key不存在才设置，带xx为key存在才设置
+		// mset
+		// setex，设置/更新key的值和过期时间
+		//int ExecuteCommandReturnError(std::string &error, const char *format, ...);
+
+		// del，返回删除key数量
+		// expire，设置/更新key的过期时间(秒)，成功返回1，失败返回0
+		// ttl，返回key的过期时间(秒)，永久返回-1，key不存在返回-2
+		// pexpire，设置/更新key的过期时间(毫秒)，成功返回1，失败返回0
+		// pttl，返回key的过期时间(毫秒)，永久返回-1，key不存在返回-2
+		// persist，移除key的过期时间，成功返回1，失败返回0
+		// setnx，若key不存在设置key的值返回1，否则返回0
+		//int ExecuteCommandReturnInteger(long long &result, const char *format, ...);
+
+		// script load
+		// get，key不存在返回失败
+		// getset，成功返回旧值，key不存在时会返回失败但是key的值设置成功
+		//int ExecuteCommandReturnString(std::string &result, const char *format, ...);
+
+		// mget，返回所有key的值
+		//int ExecuteCommandReturnStrings(std::vector<std::string> &results, const char *format, ...);
 		{
-			int ret = 0;
+			RedisReply redis_reply;
+			bool ret = false;
 
-			//std::string error;
-			//ret = sRedisManager.ExecuteCommandReturnError(error, "set user huiwang");
-			//NLOG("ExecuteCommandReturnError:ret=%d, error=%s", ret, error.c_str());
+			//std::vector<std::string> results;
+			//std::string results_str;
+			//ret = sRedisManager.ExecuteCommand(redis_reply, "mget user user2 user1");
+			//if (ret && redis_reply.GetArrayStrings(results))
+			//{
+			//	StringHelper::GetVectorStr<std::string>(results, results_str);
+			//}
+			//NLOG("ret=%d, results_str=%s", ret, results_str.c_str());
 
-			//std::string result;
-			//ret = sRedisManager.ExecuteCommandReturnString(result, "getset user1 xxxx");
-			//NLOG("ExecuteCommandReturnString:ret=%d, result=%s", ret, result.c_str());
-
-			//long long del_num;
-			//ret = sRedisManager.ExecuteCommandReturnInteger(del_num, "del user1 user2");
-			//NLOG("ExecuteCommandReturnString:ret=%d, del_num=%ld", ret, del_num);
-
-			std::vector<std::string> results;
-			ret = sRedisManager.ExecuteCommandReturnStrings(results, "mget user1 user");
-			std::string results_str;
-			StringHelper::GetVectorStr<std::string>(results, results_str);
-			NLOG("ExecuteCommandReturnStrings:ret=%d, results=%s", ret, results_str.c_str());
+			ret = sRedisManager.ExecuteCommand(redis_reply, "set user 1 nx");
+			NLOG("ret=%d, type=%d", ret, redis_reply.GetType());
 		}
 
 		//Redis *redis = sRedisManager.Get();
@@ -250,7 +265,7 @@ int main()
 {
 	//TestRedis();
 	//TestHiRedis();
-	//TestRedisManagerThread();
-	TestRedisManager();
+	TestRedisManagerThread();
+	//TestRedisManager();
 	return 0;
 }

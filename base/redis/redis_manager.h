@@ -32,6 +32,7 @@ public:
 	bool IsError() const;
 
 public:
+	int GetType() const;
 	bool GetArrayStrings(std::vector<std::string> &datas) const;
 	bool GetString(std::string &data) const;
 	bool GetInteger(long long &data) const;
@@ -90,27 +91,8 @@ public:
 	void Put(Redis *redis);
 
 public:
-	// set
-	// mset
-	int ExecuteCommandReturnError(std::string &error, const char *format, ...);
-
-	int ExecuteCommandReturnStatus(std::string &result, const char *format, ...);
-
-	// del，返回删除key数量
-	// expire，设置/更新key的过期时间(秒)，成功返回1，失败返回0
-	// ttl，返回key的过期时间(秒)，永久返回-1，key不存在返回-2
-	// pexpire，设置/更新key的过期时间(毫秒)，成功返回1，失败返回0
-	// pttl，返回key的过期时间(毫秒)，永久返回-1，key不存在返回-2
-	// persist，移除key的过期时间，成功返回1，失败返回0
-	int ExecuteCommandReturnInteger(long long &result, const char *format, ...);
-
-	// script load
-	// get，key不存在返回失败
-	// getset，成功返回旧值，key不存在时会返回失败但是key的值设置成功
-	int ExecuteCommandReturnString(std::string &result, const char *format, ...);
-
-	// mget，返回所有key的值
-	int ExecuteCommandReturnStrings(std::vector<std::string> &results, const char *format, ...);
+	bool ExecuteCommand(RedisReply *reply, const char *format, ...);
+	bool ExecuteCommand(RedisReply &reply, const char *format, ...);
 
 protected:
 	bool AppendPool(int inc_count);

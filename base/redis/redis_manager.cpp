@@ -59,6 +59,16 @@ bool RedisReply::IsError() const
 	return (m_redis_reply && m_redis_reply->type == REDIS_REPLY_ERROR);
 }
 
+int RedisReply::GetType() const
+{
+	if (!m_redis_reply)
+	{
+		return REDIS_ERR;
+	}
+
+	return m_redis_reply->type;
+}
+
 bool RedisReply::GetArrayStrings(std::vector<std::string> &datas) const
 {
 	if (!IsArray())
@@ -71,8 +81,8 @@ bool RedisReply::GetArrayStrings(std::vector<std::string> &datas) const
 		redisReply *r = *(m_redis_reply->element + i);
 		if (!r || r->type != REDIS_REPLY_STRING || r->len <= 0)
 		{
-			datas.clear();
-			return false;
+			datas.emplace_back("");
+			continue;
 		}
 		datas.emplace_back(r->str);
 	}
@@ -414,83 +424,32 @@ void RedisManager::Put(Redis *redis)
 	}
 }
 
-#define EXECUTE_COMMAND_COMMON \
-	Redis *redis = Get(); \
-	if (!redis) \
-	{ \
-		return -1; \
-	} \
-	SCOPE_GUARD([&]{ Put(redis); }); \
-	RedisReply redis_reply; \
-	va_list ap; \
-	va_start(ap, format); \
-	if (!redis->ExecuteCommand(redis_reply, format, ap)) \
-	{ \
-		va_end(ap); \
-		return -2; \
-	} \
+bool RedisManager::ExecuteCommand(RedisReply *reply, const char *format, ...)
+{
+	Redis *redis = Get();
+	if (!redis)
+	{
+		return false;
+	}
+	SCOPE_GUARD([&]{ Put(redis); });
+
+	va_list ap;
+	va_start(ap, format);
+	bool ret = redis->ExecuteCommand(reply, format, ap);
 	va_end(ap);
 
-int RedisManager::ExecuteCommandReturnError(std::string &error, const char *format, ...)
-{
-	EXECUTE_COMMAND_COMMON
-
-	if (redis_reply.GetError(error))
-	{
-		return -3;
-	}
-
-	return 0;
+	return ret;
 }
 
-int RedisManager::ExecuteCommandReturnStatus(std::string &result, const char *format, ...)
+bool RedisManager::ExecuteCommand(RedisReply &reply, const char *format, ...)
 {
-	EXECUTE_COMMAND_COMMON
+	va_list ap;
+	va_start(ap, format);
+	bool ret = ExecuteCommand(&reply, format, ap);
+	va_end(ap);
 
-	if (!redis_reply.GetStatus(result))
-	{
-		return -4;
-	}
-
-	return 0;
+	return ret;
 }
-
-int RedisManager::ExecuteCommandReturnInteger(long long &result, const char *format, ...)
-{
-	EXECUTE_COMMAND_COMMON
-
-	if (!redis_reply.GetInteger(result))
-	{
-		return -4;
-	}
-
-	return 0;
-}
-
-int RedisManager::ExecuteCommandReturnString(std::string &result, const char *format, ...)
-{
-	EXECUTE_COMMAND_COMMON
-
-	if (!redis_reply.GetString(result))
-	{
-		return -4;
-	}
-
-	return 0;
-}
-
-int RedisManager::ExecuteCommandReturnStrings(std::vector<std::string> &results, const char *format, ...)
-{
-	EXECUTE_COMMAND_COMMON
-
-	if (!redis_reply.GetArrayStrings(results))
-	{
-		return -4;
-	}
-
-	return 0;
-}
-
 
 bool RedisManager::AppendPool(int inc_count)
 {
