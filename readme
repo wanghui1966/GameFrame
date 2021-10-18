@@ -165,6 +165,7 @@ base/snow_flake.h
 test/snow_flake_test.cpp
 
 # 15. redis实现的分布式锁
+解锁可以用evalsha实现原子操作，但貌似没有必要
 
 源码：
 base/redis/redis_manager.h

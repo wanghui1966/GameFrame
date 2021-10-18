@@ -9,6 +9,18 @@
 RedisLock::RedisLock()
 {
 	Init();
+	NLOG("RedisLock::RedisLock:reids_lock_key=%s", m_reids_lock_key.c_str());
+}
+
+RedisLock::RedisLock(const std::string &redis_lock_key)
+{
+	m_reids_lock_key = redis_lock_key;
+	NLOG("RedisLock::RedisLock:reids_lock_key=%s", m_reids_lock_key.c_str());
+}
+
+RedisLock::~RedisLock()
+{
+	NLOG("RedisLock::~RedisLock:reids_lock_key=%s", m_reids_lock_key.c_str());
 }
 
 bool RedisLock::TryLock()
@@ -84,5 +96,4 @@ void RedisLock::Init()
 	SnowFlake sf;
 	sf.Init(LOCAL_DATA_CENTER_ID, LOCAL_MACHINE_ID);
 	m_reids_lock_key = std::to_string(sf.GetNextId());
-	NLOG("RedisLock::Init:reids_lock_key=%s", m_reids_lock_key.c_str());
 }

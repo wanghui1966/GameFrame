@@ -21,7 +21,8 @@ class RedisLock
 {
 public:
 	RedisLock();
-	virtual ~RedisLock() {}
+	RedisLock(const std::string &redis_lock_key);
+	virtual ~RedisLock();
 
 public:
 	bool TryLock();
