@@ -67,6 +67,11 @@ public:
 	bool ExecuteAppendCommand(const char *format, ...);
 	bool ExecuteAppendCommandArgv(int argc, const char **argv, const size_t *argvlen);
 
+public:
+	// 解决变参传参问题，巨蛋疼
+	bool ExecuteCommand(RedisReply *reply, const char *format, va_list ap);
+	bool ExecuteAppendCommand(const char *format, va_list ap);
+
 protected:
 	bool ExecuteCommandV(RedisReply *reply, const char *format, va_list ap);
 

@@ -224,37 +224,53 @@ void TestRedisManager()
 			RedisReply redis_reply;
 			bool ret = false;
 
-			//std::vector<std::string> results;
-			//std::string results_str;
-			//ret = sRedisManager.ExecuteCommand(redis_reply, "mget user user2 user1");
-			//if (ret && redis_reply.GetArrayStrings(results))
-			//{
-			//	StringHelper::GetVectorStr<std::string>(results, results_str);
-			//}
-			//NLOG("ret=%d, results_str=%s", ret, results_str.c_str());
+			std::vector<std::string> results;
+			std::string results_str;
+			ret = sRedisManager.ExecuteCommand(redis_reply, "mget user user2 user1");
+			if (ret && redis_reply.GetArrayStrings(results))
+			{
+				StringHelper::GetVectorStr<std::string>(results, results_str);
+			}
+			NLOG("ret=%d, results_str=%s", ret, results_str.c_str());
 
-			ret = sRedisManager.ExecuteCommand(redis_reply, "set user 1 nx");
-			NLOG("ret=%d, type=%d", ret, redis_reply.GetType());
+			std::string evalsha = "redis.call('set', KEYS[1], ARGV[1]) return 0";
+			ret = sRedisManager.ExecuteCommand(redis_reply, "script load %s", evalsha.c_str());
+			std::string evalsha_key;
+			if (ret)
+			{
+				redis_reply.GetString(evalsha_key);
+			}
+			NLOG("evalsha:ret=%d, evalsha_key=%s, redis_type=%d", ret, evalsha_key.c_str(), redis_reply.GetType());
+
+			srand(time(nullptr));
+			if (!evalsha_key.empty())
+			{
+				std::string key = "user";
+				std::string value = "xiaohuihui" + std::to_string(rand() % 100);
+				ret = sRedisManager.ExecuteCommand(redis_reply, "evalsha %s 1 %s %s", evalsha_key.c_str(), key.c_str(), value.c_str());
+				NLOG("evalsha:ret=%d, redis_type=%d", ret, redis_reply.GetType());
+			}
+
+			evalsha = "return redis.call('get', KEYS[1])";
+			ret = sRedisManager.ExecuteCommand(redis_reply, "script load %s", evalsha.c_str());
+			evalsha_key = "";
+			if (ret)
+			{
+				redis_reply.GetString(evalsha_key);
+			}
+			NLOG("evalsha:ret=%d, evalsha_key=%s, redis_type=%d", ret, evalsha_key.c_str(), redis_reply.GetType());
+
+			if (!evalsha_key.empty())
+			{
+				ret = sRedisManager.ExecuteCommand(redis_reply, "evalsha %s 1 %s", evalsha_key.c_str(), "user");
+				std::string result_str;
+				if (ret)
+				{
+					redis_reply.GetString(result_str);
+				}
+				NLOG("evalsha:ret=%d, result_str=%s, redis_type=%d", ret, result_str.c_str(), redis_reply.GetType());
+			}
 		}
-
-		//Redis *redis = sRedisManager.Get();
-		//if (redis)
-		//{
-		//	SCOPE_GUARD([&]{ sRedisManager.Put(redis); });
-
-		//	std::string cmd = "set user xiaohuihui_";
-		//	cmd.append(std::to_string(time(nullptr)));
-		//	bool is_ok = SetRedis(redis, cmd);
-		//	NLOG("%s:is_ok=%d", cmd.c_str(), is_ok);
-
-		//	std::string user;
-		//	is_ok = GetRedisString(redis, "get user", user);
-		//	NLOG("get user:is_ok=%d, user=%s", is_ok, user.c_str());
-		//}
-		//else
-		//{
-		//	ELOG("fail for redis");
-		//}
 	} while(false);
 
 	sRedisManager.DeleteInstance();
@@ -265,7 +281,7 @@ int main()
 {
 	//TestRedis();
 	//TestHiRedis();
-	TestRedisManagerThread();
-	//TestRedisManager();
+	//TestRedisManagerThread();
+	TestRedisManager();
 	return 0;
 }

@@ -23,6 +23,17 @@ RedisLock::~RedisLock()
 	NLOG("RedisLock::~RedisLock:reids_lock_key=%s", m_reids_lock_key.c_str());
 }
 
+bool RedisLock::HasLock()
+{
+	RedisReply redis_reply;
+	if (sRedisManager.ExecuteCommand(redis_reply, "get %s", m_reids_lock_key.c_str()) && redis_reply.IsString())
+	{
+		return true;
+	}
+
+	return false;
+}
+
 bool RedisLock::TryLock()
 {
 	RedisReply redis_reply;

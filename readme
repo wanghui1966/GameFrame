@@ -175,3 +175,15 @@ base/redis/redis_lock.cpp
 
 测试源码：
 test/redis_lock_test.cpp
+
+# 16. redis封装eval和evalsha
+redis的eval和evalsha封装的库
+
+源码：
+base/redis/redis_manager.h
+base/redis/redis_manager.cpp
+base/redis/redis_script_manager.h
+base/redis/redis_script_manager.cpp
+
+测试源码：
+test/redis_script_test.cpp

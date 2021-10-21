@@ -5,6 +5,7 @@
 
 #include <chrono>
 #include <thread>
+#include <iostream>
 
 const char *HOST = "10.236.100.244";
 //const char *HOST = "127.0.0.1";
@@ -20,10 +21,14 @@ void thread_func()
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(rand() % 1000));
 		bool lock_ret = rl.Lock();
-		NLOG("thread_id=%d, key=%s, lock_ret=%d", std::this_thread::get_id(), rl.GetKey().c_str(), lock_ret);
+		std::cout << "thread_id=" << std::this_thread::get_id() << ", key=" << rl.GetKey() << ", lock_ret=" << lock_ret << std::endl;
 		std::this_thread::sleep_for(std::chrono::milliseconds(rand() % 1000));
+		if (!lock_ret)
+		{
+			continue;
+		}
 		bool unlock_ret = rl.Unlock();
-		NLOG("thread_id=%d, key=%s, unlock_ret=%d", std::this_thread::get_id(), rl.GetKey().c_str(), unlock_ret);
+		std::cout << "thread_id=" << std::this_thread::get_id() << ", key=" << rl.GetKey() << ", unlock_ret=" << unlock_ret << std::endl;
 		--count;
 	};
 }
@@ -35,7 +40,7 @@ int main()
 
 	if (sRedisManager.Init(HOST, PORT, PASSWORD))
 	{
-		std::thread threads[20];
+		std::thread threads[10];
 		for (std::thread &th : threads)
 		{
 			th = std::thread(thread_func);

@@ -25,6 +25,7 @@ public:
 	virtual ~RedisLock();
 
 public:
+	bool HasLock();
 	bool TryLock();
 	bool Lock();
 	bool Unlock();

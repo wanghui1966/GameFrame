@@ -1,6 +1,6 @@
 
-#all:common_test log4cplus_test singleton_test thread_pool_test protobuf_test thread_safe_container_test packet_test object_pool_test timer_test shm_test patch_test redis_test circle_buffer_test net_test snow_flake_test redis_lock_test
-all:redis_lock_test
+#all:common_test log4cplus_test singleton_test thread_pool_test protobuf_test thread_safe_container_test packet_test object_pool_test timer_test shm_test patch_test redis_test circle_buffer_test net_test snow_flake_test redis_lock_test redis_script_test
+all:redis_script_test
 .PHONY:all
 
 LIB_OPTION_BASE=-std=c++11 -g -I../base -D__NO_DEBUG_LOG
@@ -94,6 +94,11 @@ FILE_LIST_REDIS_LOCK=./redis_lock_test.cpp ../base/redis/redis_lock.cpp ../base/
 redis_lock_test:$(FILE_LIST_REDIS_LOCK)
 	g++ $(FILE_LIST_REDIS_LOCK) -o redis_lock_test $(LIB_OPTION_BASE) $(LIB_OPTION_REDIS_LOCK)
 
+LIB_OPTION_REDIS_SCRIPT=-I../base/redis -I../third_party_lib/hiredis -L../third_party_lib/hiredis -Wl,-rpath ../third_party_lib/hiredis -lhiredis -pthread -DUSE_EVALSHA
+FILE_LIST_REDIS_SCRIPT=./redis_script_test.cpp ../base/redis/redis_script_manager.cpp ../base/redis/redis_manager.cpp
+redis_script_test:$(FILE_LIST_REDIS_SCRIPT)
+	g++ $(FILE_LIST_REDIS_SCRIPT) -o redis_script_test $(LIB_OPTION_BASE) $(LIB_OPTION_REDIS_SCRIPT)
+
 .PHONY:clean
 clean:
 	rm -f common_test
@@ -115,3 +120,4 @@ clean:
 	rm -f net_client_test
 	rm -f snow_flake_test
 	rm -f redis_lock_test
+	rm -f redis_script_test

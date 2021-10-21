@@ -241,7 +241,7 @@ bool Redis::ExecuteCommand(RedisReply *reply, const char *format, ...)
 {
 	va_list ap;
 	va_start(ap, format);
-	bool ret = ExecuteCommandV(reply, format, ap);
+	bool ret = ExecuteCommand(reply, format, ap);
 	va_end(ap);
 	return ret;
 }
@@ -250,7 +250,7 @@ bool Redis::ExecuteCommand(RedisReply &reply, const char *format, ...)
 {
 	va_list ap;
 	va_start(ap, format);
-	bool ret = ExecuteCommandV(&reply, format, ap);
+	bool ret = ExecuteCommand(&reply, format, ap);
 	va_end(ap);
 	return ret;
 }
@@ -287,22 +287,7 @@ bool Redis::ExecuteAppendCommand(const char *format, ...)
 {
 	va_list ap;
 	va_start(ap, format);
-	bool ret = true;
-	do
-	{
-		if (!EnsureConnect())
-		{
-			ret = false;
-			break;
-		}
-
-		if (redisvAppendCommand(m_connect, format, ap) == REDIS_ERR)
-		{
-			ELOG("Redis::ExecuteAppendCommand fail for redisvAppendCommand:err_str=%s", m_connect->errstr);
-			ret = false;
-			break;
-		}
-	} while (false);
+	bool ret = ExecuteAppendCommand(format, ap);
 	va_end(ap);
 
 	return ret;
@@ -322,6 +307,33 @@ bool Redis::ExecuteAppendCommandArgv(int argc, const char **argv, const size_t *
 	}
 
 	return true;
+}
+
+bool Redis::ExecuteCommand(RedisReply *reply, const char *format, va_list ap)
+{
+	return ExecuteCommandV(reply, format, ap);
+}
+
+bool Redis::ExecuteAppendCommand(const char *format, va_list ap)
+{
+	bool ret = true;
+	do
+	{
+		if (!EnsureConnect())
+		{
+			ret = false;
+			break;
+		}
+
+		if (redisvAppendCommand(m_connect, format, ap) == REDIS_ERR)
+		{
+			ELOG("Redis::ExecuteAppendCommand fail for redisvAppendCommand:err_str=%s", m_connect->errstr);
+			ret = false;
+			break;
+		}
+	} while (false);
+
+	return ret;
 }
 
 bool Redis::ExecuteCommandV(RedisReply *reply, const char *format, va_list ap)
@@ -443,9 +455,16 @@ bool RedisManager::ExecuteCommand(RedisReply *reply, const char *format, ...)
 
 bool RedisManager::ExecuteCommand(RedisReply &reply, const char *format, ...)
 {
+	Redis *redis = Get();
+	if (!redis)
+	{
+		return false;
+	}
+	SCOPE_GUARD([&]{ Put(redis); });
+
 	va_list ap;
 	va_start(ap, format);
-	bool ret = ExecuteCommand(&reply, format, ap);
+	bool ret = redis->ExecuteCommand(&reply, format, ap);
 	va_end(ap);
 
 	return ret;
