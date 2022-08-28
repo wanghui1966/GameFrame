@@ -36,7 +36,16 @@ base/async_worker_manager.h 为线程池的一个实现类，为单例，保证�
 test/task_test.h
 test/thread_pool_test.cpp
 
-# 4. protocbuf
+# 4. 函数线程池
+> 一个线程池的实现，使用c++11的新特性，std::funture，std::async等
+
+源码：
+base/func_thread_pool/func_thread_pool.h 为线程池的实现，由于lambda表达式在模板实例化有问题，因为.h和.cpp不能分开
+
+测试源码：
+test/func_thread_pool_test.cpp
+
+# 5. protocbuf
 PB的接入
 
 源码：
@@ -47,7 +56,7 @@ protocbuf/cpp/* 为pb生成文件
 测试代码：
 test/protobuf_test.cpp
 
-# 5. 线程安全容器
+# 6. 线程安全容器
 带锁的容器，线程安全容器
 
 源码：
@@ -57,7 +66,7 @@ base/thread_safe_container/ts_queue.h
 test/thread_safe_container_test.cpp
 
 
-# 6. 系列化
+# 7. 系列化
 结构体 或 pb 系列化
 
 源码：
@@ -67,7 +76,7 @@ base/packet/packet.cpp
 测试代码：
 test/packet_test.cpp
 
-# 7. 带心跳的对象池
+# 8. 带心跳的对象池
 一个对象池的实现，带心跳
 
 源码：
@@ -77,7 +86,7 @@ base/object_pool/object.h
 测试代码：
 test/object_pool_test.cpp
 
-# 8. 定时器
+# 9. 定时器
 定时器的实现，可支持一次性任务和循环任务
 改进(可跟线程池结合使用)
 
@@ -87,7 +96,7 @@ base/timer/timer.h
 测试代码：
 test/timer_test.cpp
 
-# 9. 共享内存
+# 10. 共享内存
 
 源码：
 base/shm/shm_data.h
@@ -96,7 +105,7 @@ base/shm/shm_manager.h
 测试代码：
 test/timer_test.cpp
 
-# 10. 热更
+# 11. 热更
 使用so文件进行热更的实现
 
 源码：
@@ -108,7 +117,7 @@ test/patch_wind.h
 test/patch_wind.cpp
 test/patch.cpp
 
-# 11. redis
+# 12. redis
 使用开源hiredis对redis进行封装成一个redis连接池
 
 redis配置：redis/redis.conf
@@ -123,7 +132,7 @@ base/redis/redis_manager.cpp
 测试代码：
 test/redis_test.cpp
 
-# 12. 环形缓冲区
+# 13. 环形缓冲区
 一个简单的环形缓冲区
 
 源码：
@@ -133,7 +142,7 @@ base/circle_buffer/circle_buffer.cpp
 测试代码：
 test/circle_buffer_test.cpp
 
-# 13. epoll网络收发包
+# 14. epoll网络收发包
 epoll实现的服务器逻辑
 支持多客户端连接，使用环形缓冲区作为session的缓存，可以处理tcp的拆包/粘包
 pb工厂
@@ -155,7 +164,7 @@ protobuf/proto/protobuf_factory.cpp
 test/net_server_test.cpp
 test/net_client_test.cpp
 
-# 14. 雪花算法snow_flake
+# 15. 雪花算法snow_flake
 雪花算法的实现
 
 源码：
@@ -164,7 +173,7 @@ base/snow_flake.h
 测试源码：
 test/snow_flake_test.cpp
 
-# 15. redis实现的分布式锁
+# 16. redis实现的分布式锁
 解锁可以用evalsha实现原子操作，但貌似没有必要
 
 源码：
@@ -176,7 +185,7 @@ base/redis/redis_lock.cpp
 测试源码：
 test/redis_lock_test.cpp
 
-# 16. redis封装eval和evalsha
+# 17. redis封装eval和evalsha
 redis的eval和evalsha封装的库
 
 源码：
