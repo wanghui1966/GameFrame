@@ -1,5 +1,5 @@
 
-#all:common_test log4cplus_test singleton_test thread_pool_test func_thread_pool_test protobuf_test thread_safe_container_test packet_test object_pool_test timer_test shm_test patch_test redis_test circle_buffer_test net_test snow_flake_test redis_lock_test redis_script_test
+#all:common_test log4cplus_test singleton_test thread_pool_test func_thread_pool_test protobuf_test thread_safe_container_test packet_test object_pool_test timer_test shm_test patch_test redis_test circle_buffer_test net_test snow_flake_test redis_lock_test redis_script_test pcre_test
 all:func_thread_pool_test
 .PHONY:all
 
@@ -104,6 +104,11 @@ FILE_LIST_REDIS_SCRIPT=./redis_script_test.cpp ../base/redis/redis_script_manage
 redis_script_test:$(FILE_LIST_REDIS_SCRIPT)
 	g++ $(FILE_LIST_REDIS_SCRIPT) -o redis_script_test $(LIB_OPTION_BASE) $(LIB_OPTION_REDIS_SCRIPT)
 
+LIB_OPTION_PCRE=-I../third_party_lib/pcre/ -L../third_party_lib/pcre/.libs/ -lpcre -Wl,-rpath ../third_party_lib/pcre/.libs/
+FILE_LIST_PCRE=./pcre_test.cpp
+pcre_test:$(FILE_LIST_PCRE)
+	g++ $(FILE_LIST_PCRE) -o pcre_test $(LIB_OPTION_BASE) $(LIB_OPTION_PCRE)
+
 .PHONY:clean
 clean:
 	rm -f common_test
@@ -127,3 +132,4 @@ clean:
 	rm -f snow_flake_test
 	rm -f redis_lock_test
 	rm -f redis_script_test
+	rm -f pcre_test

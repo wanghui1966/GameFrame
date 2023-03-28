@@ -196,3 +196,9 @@ base/redis/redis_script_manager.cpp
 
 测试源码：
 test/redis_script_test.cpp
+
+# 18. pcre测试
+pcre为一个perl库，用来解决gcc<=4.8.5时没有正则方法或者正则方法不完整的问题
+
+测试源码：
+test/pcre_test.cpp

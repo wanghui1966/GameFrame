@@ -1,5 +1,6 @@
 
 # 1. log4cplus
+
 编译步骤：以log4cplus-1.2.1.zip为例
 1. 解压log4cplus-1.2.1.zip，解压后目录为log4cplus-1.2.1，更改为log4cplus
 2. cd log4cplus
@@ -8,6 +9,7 @@
 5. make check
 
 # 2. redis
+
 安装步骤：以redis-5.0.8.tar.gz为例，6.0.5莫名编译不过。。。
 1. 解压redis-5.0.8.tar.gz，解压后目录为redis-5.0.8.tar.gz，更改为redis
 2. cd redis
@@ -15,6 +17,7 @@
 4. make test
 
 # 3. hiredis
+
 事实上redis内已包含hiredis，在deps目录下，但是还是重新弄一个最新的吧
 
 由于没有执行make install，所以运行时候会报错：./redis_test: error while loading shared libraries: libhiredis.so.0.14: cannot open shared object file: No such file or directory，因此建个软连接吧！！！
@@ -25,3 +28,11 @@
 3. make
 4. make test
 5. ln -snf libhiredis.so libhiredis.so.0.14
+
+# 4. pcre
+
+编译步骤：以pcre-8.45.zip为例
+1. 解压pcre-8.45.zip，解压后目录pcre-8.45，更改为pcre
+2. cd pcre
+3. ./configure --enable-utf8，此处需加入utf支持，否则pcre_compile函数不支持PCRE_UTF8
+4. make

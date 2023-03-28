@@ -19,6 +19,7 @@ test/common_test
 test/log4cplus_test
 test/singleton_test
 test/thread_pool_test
+test/func_thread_pool_test
 test/protobuf_test
 test/thread_safe_container_test
 test/packet_test
@@ -33,3 +34,6 @@ test/circle_buffer_test
 test/net_server_test
 test/net_client_test
 test/snow_flake_test
+test/redis_lock_test
+test/redis_script_test
+test/pcre_test
