@@ -1,11 +1,7 @@
 #include <iostream>
 #include <string>
 
-#if __GNUC__ <4
-	#include <pcre/pcre.h>
-#else
-	#include <pcre.h>
-#endif
+#include <pcre.h>
 
 bool match(pcre *regular_reg, const std::string &str)
 {
